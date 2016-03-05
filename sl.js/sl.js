@@ -34,31 +34,93 @@ var SLjs;
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
+    var Interface;
+    (function (Interface) {
+        function ConstructInterface() {
+            SLjs.settings.applicationInterface = document.createElement('div');
+            SLjs.settings.applicationInterface.id = SLjs.Parameters.INTERFACE_DIV_ID;
+            SLjs.settings.parentElement.appendChild(SLjs.settings.applicationInterface);
+        }
+        Interface.ConstructInterface = ConstructInterface;
+        function ConstructWelcomeWithName(callback) {
+            SLjs.settings.applicationInterface.className = 'welcome';
+            var helloHeading = document.createElement('h2');
+            helloHeading.innerText = SLjs.Strings.WELCOME_MSG;
+            SLjs.settings.applicationInterface.appendChild(helloHeading);
+            var nameHeading = document.createElement('h3');
+            nameHeading.innerText = SLjs.Strings.NAME_REQUIRED;
+            SLjs.settings.applicationInterface.appendChild(nameHeading);
+            var nameInputBox = document.createElement('div');
+            nameInputBox.className = 'welcome-input';
+            SLjs.settings.applicationInterface.appendChild(nameInputBox);
+            var nameInput = document.createElement('input');
+            nameInput.placeholder = SLjs.Strings.NAME_INPUT_PLACEHOLDER;
+            nameInputBox.appendChild(nameInput);
+            var nameInputBtn = document.createElement('button');
+            nameInputBtn.innerText = SLjs.Strings.NAME_INPUT_BUTTON;
+            nameInputBtn.type = 'button';
+            nameInputBtn.onclick = function () {
+                callback(nameInput.value);
+            };
+            nameInputBox.appendChild(nameInputBtn);
+        }
+        Interface.ConstructWelcomeWithName = ConstructWelcomeWithName;
+    })(Interface = SLjs.Interface || (SLjs.Interface = {}));
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    var Parameters;
+    (function (Parameters) {
+        Parameters.INTERFACE_DIV_ID = 'sljs-interface';
+    })(Parameters = SLjs.Parameters || (SLjs.Parameters = {}));
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    var settings;
+    (function (settings) {
+    })(settings = SLjs.settings || (SLjs.settings = {}));
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    var Strings;
+    (function (Strings) {
+        Strings.WELCOME_MSG = 'Welcome to the site!';
+        Strings.NAME_REQUIRED = 'Before we begin? What can we call you during our conversation?';
+        Strings.NAME_INPUT_PLACEHOLDER = 'Enter your name in here';
+        Strings.NAME_INPUT_BUTTON = 'Continue on';
+    })(Strings = SLjs.Strings || (SLjs.Strings = {}));
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
     var Application = (function () {
         function Application(config) {
-            this.config = config;
-            this.element = document.getElementById(this.config.element);
+            SLjs.settings.config = config;
+            SLjs.settings.parentElement = document.getElementById(SLjs.settings.config.element);
+            SLjs.Interface.ConstructInterface();
             this.constructData();
-            if (this.config.visitorName === null || this.config.visitorName === undefined) {
+            if (SLjs.settings.config.visitorName === null || SLjs.settings.config.visitorName === undefined) {
+                SLjs.Interface.ConstructWelcomeWithName(function (visitorName) {
+                    console.log(visitorName);
+                });
             }
             else {
-                this.config.visitorName += ' (' + this.config.applicationName + ')';
+                SLjs.settings.config.visitorName += ' (' + SLjs.settings.config.applicationName + ')';
             }
         }
         Application.prototype.constructData = function () {
-            if (this.config.useServerSideFeatures === null || this.config.useServerSideFeatures === undefined) {
-                this.config.useServerSideFeatures = false;
+            if (SLjs.settings.config.useServerSideFeatures === null || SLjs.settings.config.useServerSideFeatures === undefined) {
+                SLjs.settings.config.useServerSideFeatures = false;
             }
-            if (this.config.visitorIcon === null || this.config.visitorIcon === undefined) {
-                this.config.visitorIcon = ':red_circle:';
+            if (SLjs.settings.config.visitorIcon === null || SLjs.settings.config.visitorIcon === undefined) {
+                SLjs.settings.config.visitorIcon = ':red_circle:';
             }
-            if (this.config.applicationName === null || this.config.applicationName === undefined) {
-                this.config.applicationName = 'Visitor';
+            if (SLjs.settings.config.applicationName === null || SLjs.settings.config.applicationName === undefined) {
+                SLjs.settings.config.applicationName = 'SL.js';
             }
         };
         Application.prototype.sendInitialMessage = function (message) {
             var userDataPoints = [];
-            if (!this.config.useServerSideFeatures) {
+            if (!SLjs.settings.config.useServerSideFeatures) {
                 userDataPoints.push({
                     title: 'First message for this visit to the channel',
                     text: 'Reply to me using !v1 [message]',
@@ -68,10 +130,10 @@ var SLjs;
             var packet = {
                 attachments: userDataPoints,
                 text: message,
-                username: this.config.visitorName,
-                icon_emoji: this.config.visitorIcon
+                username: SLjs.settings.config.visitorName,
+                icon_emoji: SLjs.settings.config.visitorIcon
             };
-            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage, this.config);
+            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage, SLjs.settings.config);
         };
         Application.prototype.sendMessage = function (message) {
             if (!this.firstMessageSent) {
@@ -81,10 +143,10 @@ var SLjs;
             }
             var packet = {
                 text: message,
-                username: this.config.visitorName,
-                icon_emoji: this.config.visitorIcon
+                username: SLjs.settings.config.visitorName,
+                icon_emoji: SLjs.settings.config.visitorIcon
             };
-            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage, this.config);
+            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage, SLjs.settings.config);
         };
         return Application;
     })();

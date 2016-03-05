@@ -1,25 +1,31 @@
 ﻿/// <reference path="app.models.ts" />
 /// <reference path="app.http.ts" />
 /// <reference path="app.endpoints.ts" />
+/// <reference path="app.interface.ts" />
+/// <reference path="app.parameters.ts" />
+/// <reference path="app.strings.ts" />
+/// <reference path="app.settings.ts" />
 
 /**
  * The base application that handles all primary SL.js functionality
  */
 module SLjs {
     export class Application {
-        config: Models.SLconfig;
-        element: HTMLElement;
         firstMessageSent: boolean;
 
         constructor(config: Models.SLconfig) {
-            this.config = config;
-            this.element = document.getElementById(this.config.element);
+            settings.config = config;
+            settings.parentElement = document.getElementById(settings.config.element);
+
+            Interface.ConstructInterface();
             this.constructData();
 
-            if (this.config.visitorName === null || this.config.visitorName === undefined) {
-                // Show the name prompt
+            if (settings.config.visitorName === null || settings.config.visitorName === undefined) {
+                Interface.ConstructWelcomeWithName(function (visitorName: string) {
+                    console.log(visitorName);
+                });
             } else {
-                this.config.visitorName += ' (' + this.config.applicationName + ')';
+                settings.config.visitorName += ' (' + settings.config.applicationName + ')';
                 // Show the chat prompt
             }
         }
@@ -29,16 +35,16 @@ module SLjs {
          * making sure that the user name and icon are set correctly
          */
         constructData() {
-            if (this.config.useServerSideFeatures === null || this.config.useServerSideFeatures === undefined) {
-                this.config.useServerSideFeatures = false;
+            if (settings.config.useServerSideFeatures === null || settings.config.useServerSideFeatures === undefined) {
+                settings.config.useServerSideFeatures = false;
             }
 
-            if (this.config.visitorIcon === null || this.config.visitorIcon === undefined) {
-                this.config.visitorIcon = ':red_circle:';
+            if (settings.config.visitorIcon === null || settings.config.visitorIcon === undefined) {
+                settings.config.visitorIcon = ':red_circle:';
             }
 
-            if (this.config.applicationName === null || this.config.applicationName === undefined) {
-                this.config.applicationName = 'Visitor';
+            if (settings.config.applicationName === null || settings.config.applicationName === undefined) {
+                settings.config.applicationName = 'SL.js';
             }
         }
 
@@ -49,7 +55,7 @@ module SLjs {
         sendInitialMessage(message: string) {
             var userDataPoints: Models.SLAttachmentItem[] = [];
 
-            if (!this.config.useServerSideFeatures) {
+            if (!settings.config.useServerSideFeatures) {
                 userDataPoints.push({
                     title: 'First message for this visit to the channel',
                     text: 'Reply to me using !v1 [message]',
@@ -60,11 +66,11 @@ module SLjs {
             var packet: Models.SLAttachment = {
                 attachments: userDataPoints,
                 text: message,
-                username: this.config.visitorName,
-                icon_emoji: this.config.visitorIcon
+                username: settings.config.visitorName,
+                icon_emoji: settings.config.visitorIcon
             }
 
-            Http.Action(packet, Endpoints.PostMessage, this.config);
+            Http.Action(packet, Endpoints.PostMessage, settings.config);
         }
 
         /**
@@ -81,11 +87,11 @@ module SLjs {
 
             var packet: Models.SLMessage = {
                 text: message,
-                username: this.config.visitorName,
-                icon_emoji: this.config.visitorIcon
+                username: settings.config.visitorName,
+                icon_emoji: settings.config.visitorIcon
             };
 
-            Http.Action(packet, Endpoints.PostMessage, this.config);
+            Http.Action(packet, Endpoints.PostMessage, settings.config);
         }
     }
 }

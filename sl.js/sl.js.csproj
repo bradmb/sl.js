@@ -22,15 +22,19 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.css" />
+    <Content Include="sl.js.css" />
     <Content Include="sl.testing.js" />
     <Content Include="index.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.endpoints.ts" />
+    <TypeScriptCompile Include="app.settings.ts" />
     <TypeScriptCompile Include="app.http.ts" />
+    <TypeScriptCompile Include="app.interface.ts" />
     <TypeScriptCompile Include="app.models.ts" />
+    <TypeScriptCompile Include="app.parameters.ts" />
+    <TypeScriptCompile Include="app.strings.ts" />
     <TypeScriptCompile Include="app.ts" />
   </ItemGroup>
   <ItemGroup>

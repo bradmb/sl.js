@@ -1,0 +1,47 @@
+﻿#sljs-interface {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f6f6f6;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+}
+
+#sljs-interface.welcome {
+    width: 600px;
+    height: 250px;
+}
+
+#sljs-interface.welcome h2 {
+    text-align: center;
+
+}
+
+#sljs-interface.welcome h3 {
+    text-align: center;
+    font-style: italic;
+}
+
+#sljs-interface.welcome .welcome-input {
+    text-align: center;
+}
+
+#sljs-interface.welcome .welcome-input input {
+    font-size: 20pt;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 500px;
+}
+
+#sljs-interface.welcome .welcome-input button {
+    font-size: 15pt;
+    font-weight: bold;
+    padding: 10px;
+    width: 450px;
+    color: #ffffff;
+    background-color: #ad0000;
+    border: solid 1px #808080;
+}
