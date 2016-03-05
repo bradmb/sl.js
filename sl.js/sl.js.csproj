@@ -22,20 +22,20 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sl.js.css" />
+    <Content Include="release\sl.js.css" />
     <Content Include="sl.testing.js" />
     <Content Include="index.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="app.endpoints.ts" />
-    <TypeScriptCompile Include="app.settings.ts" />
-    <TypeScriptCompile Include="app.http.ts" />
-    <TypeScriptCompile Include="app.interface.ts" />
-    <TypeScriptCompile Include="app.models.ts" />
-    <TypeScriptCompile Include="app.parameters.ts" />
-    <TypeScriptCompile Include="app.strings.ts" />
-    <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="source\app.endpoints.ts" />
+    <TypeScriptCompile Include="source\app.settings.ts" />
+    <TypeScriptCompile Include="source\app.http.ts" />
+    <TypeScriptCompile Include="source\app.interface.ts" />
+    <TypeScriptCompile Include="source\app.models.ts" />
+    <TypeScriptCompile Include="source\app.parameters.ts" />
+    <TypeScriptCompile Include="source\app.strings.ts" />
+    <TypeScriptCompile Include="source\app.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="web.Debug.config">
@@ -45,6 +45,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>
@@ -79,8 +80,8 @@
     <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
     <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
     <TypeScriptModuleKind>None</TypeScriptModuleKind>
-    <TypeScriptOutFile>sl.js</TypeScriptOutFile>
-    <TypeScriptOutDir />
+    <TypeScriptOutFile>release/sl.js</TypeScriptOutFile>
+    <TypeScriptOutDir>source</TypeScriptOutDir>
     <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
     <TypeScriptNoEmitOnError>True</TypeScriptNoEmitOnError>
     <TypeScriptMapRoot />
