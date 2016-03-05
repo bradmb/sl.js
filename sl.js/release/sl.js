@@ -48,7 +48,7 @@ var SLjs;
         function ConstructWelcomeWithName(callback) {
             ApplicationInterface.className = 'welcome';
             var helloHeading = document.createElement('h2');
-            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace('%APPNAME%', SLjs.Config.applicationName);
+            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace(SLjs.Strings.APP_NAME_PARAM, SLjs.Config.applicationName);
             ApplicationInterface.appendChild(helloHeading);
             var nameHeading = document.createElement('h3');
             nameHeading.innerText = SLjs.Strings.NAME_REQUIRED;
@@ -71,7 +71,7 @@ var SLjs;
         function ConstructConversationWindow() {
             ApplicationInterface.innerHTML = '';
             var helloHeading = document.createElement('h2');
-            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace('%APPNAME%', SLjs.Config.applicationName);
+            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace(SLjs.Strings.APP_NAME_PARAM, SLjs.Config.applicationName);
             ApplicationInterface.appendChild(helloHeading);
         }
         Interface.ConstructConversationWindow = ConstructConversationWindow;
@@ -88,7 +88,13 @@ var SLjs;
 (function (SLjs) {
     var Strings;
     (function (Strings) {
-        Strings.WELCOME_MSG = 'Welcome to %APPNAME%!';
+        Strings.APP_NAME = 'SL.js';
+        Strings.FIRST_MESSAGE_HEADER = 'First message for this visit to the channel';
+        Strings.MESSAGE_REPLY_HINT = 'Reply to me using !v1 [message]';
+        Strings.ATTACHMENT_COLOR = '#D00000';
+        Strings.VISITOR_ICON = ':red_circle:';
+        Strings.APP_NAME_PARAM = '%APPNAME%';
+        Strings.WELCOME_MSG = 'Welcome to ' + Strings.APP_NAME_PARAM + '!';
         Strings.NAME_REQUIRED = 'Before we begin? What can we call you during our conversation?';
         Strings.NAME_INPUT_PLACEHOLDER = 'Enter your name in here';
         Strings.NAME_INPUT_BUTTON = 'Continue on';
@@ -117,19 +123,19 @@ var SLjs;
                 SLjs.Config.useServerSideFeatures = false;
             }
             if (SLjs.Config.visitorIcon === null || SLjs.Config.visitorIcon === undefined) {
-                SLjs.Config.visitorIcon = ':red_circle:';
+                SLjs.Config.visitorIcon = SLjs.Strings.VISITOR_ICON;
             }
             if (SLjs.Config.applicationName === null || SLjs.Config.applicationName === undefined) {
-                SLjs.Config.applicationName = 'SL.js';
+                SLjs.Config.applicationName = SLjs.Strings.APP_NAME;
             }
         };
         Application.prototype.sendInitialMessage = function (message) {
             var userDataPoints = [];
             if (!SLjs.Config.useServerSideFeatures) {
                 userDataPoints.push({
-                    title: 'First message for this visit to the channel',
-                    text: 'Reply to me using !v1 [message]',
-                    color: '#D00000'
+                    title: SLjs.Strings.FIRST_MESSAGE_HEADER,
+                    text: SLjs.Strings.MESSAGE_REPLY_HINT,
+                    color: SLjs.Strings.ATTACHMENT_COLOR
                 });
             }
             var packet = {

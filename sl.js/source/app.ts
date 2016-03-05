@@ -41,11 +41,11 @@ module SLjs {
             }
 
             if (Config.visitorIcon === null || Config.visitorIcon === undefined) {
-                Config.visitorIcon = ':red_circle:';
+                Config.visitorIcon = Strings.VISITOR_ICON;
             }
 
             if (Config.applicationName === null || Config.applicationName === undefined) {
-                Config.applicationName = 'SL.js';
+                Config.applicationName = Strings.APP_NAME;
             }
         }
 
@@ -58,9 +58,9 @@ module SLjs {
 
             if (!Config.useServerSideFeatures) {
                 userDataPoints.push({
-                    title: 'First message for this visit to the channel',
-                    text: 'Reply to me using !v1 [message]',
-                    color: '#D00000'
+                    title: Strings.FIRST_MESSAGE_HEADER,
+                    text: Strings.MESSAGE_REPLY_HINT,
+                    color: Strings.ATTACHMENT_COLOR
                 });
             }
 

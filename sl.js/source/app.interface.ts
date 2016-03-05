@@ -21,7 +21,7 @@
         ApplicationInterface.className = 'welcome';
 
         var helloHeading = document.createElement('h2');
-        helloHeading.innerText = Strings.WELCOME_MSG.replace('%APPNAME%', Config.applicationName);
+        helloHeading.innerText = Strings.WELCOME_MSG.replace(Strings.APP_NAME_PARAM, Config.applicationName);
         ApplicationInterface.appendChild(helloHeading);
 
         var nameHeading = document.createElement('h3');
@@ -50,7 +50,7 @@
         ApplicationInterface.innerHTML = '';
 
         var helloHeading = document.createElement('h2');
-        helloHeading.innerText = Strings.WELCOME_MSG.replace('%APPNAME%', Config.applicationName);
+        helloHeading.innerText = Strings.WELCOME_MSG.replace(Strings.APP_NAME_PARAM, Config.applicationName);
         ApplicationInterface.appendChild(helloHeading);
 
     }
