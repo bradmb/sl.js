@@ -95,13 +95,3 @@ module SLjs {
         }
     }
 }
-
-//window.onload = () => {
-//    var slConfig: SLjs.Models.SLconfig = {
-//        token: '',
-//        channel: '',
-//        element: 'sl-app'
-//    };
-
-//    var sl = new SLjs.Application(slConfig);
-//};
