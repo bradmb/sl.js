@@ -1,4 +1,4 @@
-﻿/// <reference path="app.interfaces.ts" />
+﻿/// <reference path="app.models.ts" />
 /// <reference path="app.http.ts" />
 /// <reference path="app.endpoints.ts" />
 

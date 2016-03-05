@@ -30,7 +30,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="app.endpoints.ts" />
     <TypeScriptCompile Include="app.http.ts" />
-    <TypeScriptCompile Include="app.interfaces.ts" />
+    <TypeScriptCompile Include="app.models.ts" />
     <TypeScriptCompile Include="app.ts" />
   </ItemGroup>
   <ItemGroup>
