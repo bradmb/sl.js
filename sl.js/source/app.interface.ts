@@ -1,4 +1,7 @@
 ﻿module SLjs.Interface {
+    /**
+     * Builds the parent interface that all objects will be rendered into
+     */
     export function ConstructInterface() {
         settings.applicationInterface = document.createElement('div');
         settings.applicationInterface.id = Parameters.INTERFACE_DIV_ID;
@@ -6,6 +9,10 @@
         settings.parentElement.appendChild(settings.applicationInterface);
     }
 
+    /**
+     * Builds the welcome screen, asking for the user's name
+     * @param callback Returns to the parent method so we can put their name into a variable and build the conversation window
+     */
     export function ConstructWelcomeWithName(callback: (name: string) => any) {
         settings.applicationInterface.className = 'welcome';
 
@@ -33,5 +40,9 @@
         };
 
         nameInputBox.appendChild(nameInputBtn);
+    }
+
+    export function ConstructConversationWindow() {
+
     }
 }

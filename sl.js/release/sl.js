@@ -8,12 +8,6 @@ var SLjs;
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
-    var settings;
-    (function (settings) {
-    })(settings = SLjs.settings || (SLjs.settings = {}));
-})(SLjs || (SLjs = {}));
-var SLjs;
-(function (SLjs) {
     var Http;
     (function (Http) {
         function Action(packet, action, config) {
@@ -71,6 +65,9 @@ var SLjs;
             nameInputBox.appendChild(nameInputBtn);
         }
         Interface.ConstructWelcomeWithName = ConstructWelcomeWithName;
+        function ConstructConversationWindow() {
+        }
+        Interface.ConstructConversationWindow = ConstructConversationWindow;
     })(Interface = SLjs.Interface || (SLjs.Interface = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
@@ -79,6 +76,12 @@ var SLjs;
     (function (Parameters) {
         Parameters.INTERFACE_DIV_ID = 'sljs-interface';
     })(Parameters = SLjs.Parameters || (SLjs.Parameters = {}));
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    var settings;
+    (function (settings) {
+    })(settings = SLjs.settings || (SLjs.settings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
