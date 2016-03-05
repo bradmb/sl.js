@@ -36,23 +36,26 @@ var SLjs;
 (function (SLjs) {
     var Interface;
     (function (Interface) {
-        function ConstructInterface() {
-            SLjs.settings.applicationInterface = document.createElement('div');
-            SLjs.settings.applicationInterface.id = SLjs.Parameters.INTERFACE_DIV_ID;
-            SLjs.settings.parentElement.appendChild(SLjs.settings.applicationInterface);
+        var ApplicationInterface;
+        var ParentElement;
+        function ConstructInterface(parentElement) {
+            ApplicationInterface = document.createElement('div');
+            ApplicationInterface.id = SLjs.Parameters.INTERFACE_DIV_ID;
+            ParentElement = parentElement;
+            ParentElement.appendChild(ApplicationInterface);
         }
         Interface.ConstructInterface = ConstructInterface;
         function ConstructWelcomeWithName(callback) {
-            SLjs.settings.applicationInterface.className = 'welcome';
+            ApplicationInterface.className = 'welcome';
             var helloHeading = document.createElement('h2');
-            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace('%APPNAME%', SLjs.settings.config.applicationName);
-            SLjs.settings.applicationInterface.appendChild(helloHeading);
+            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace('%APPNAME%', SLjs.Config.applicationName);
+            ApplicationInterface.appendChild(helloHeading);
             var nameHeading = document.createElement('h3');
             nameHeading.innerText = SLjs.Strings.NAME_REQUIRED;
-            SLjs.settings.applicationInterface.appendChild(nameHeading);
+            ApplicationInterface.appendChild(nameHeading);
             var nameInputBox = document.createElement('div');
             nameInputBox.className = 'welcome-input';
-            SLjs.settings.applicationInterface.appendChild(nameInputBox);
+            ApplicationInterface.appendChild(nameInputBox);
             var nameInput = document.createElement('input');
             nameInput.placeholder = SLjs.Strings.NAME_INPUT_PLACEHOLDER;
             nameInputBox.appendChild(nameInput);
@@ -66,6 +69,10 @@ var SLjs;
         }
         Interface.ConstructWelcomeWithName = ConstructWelcomeWithName;
         function ConstructConversationWindow() {
+            ApplicationInterface.innerHTML = '';
+            var helloHeading = document.createElement('h2');
+            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace('%APPNAME%', SLjs.Config.applicationName);
+            ApplicationInterface.appendChild(helloHeading);
         }
         Interface.ConstructConversationWindow = ConstructConversationWindow;
     })(Interface = SLjs.Interface || (SLjs.Interface = {}));
@@ -76,12 +83,6 @@ var SLjs;
     (function (Parameters) {
         Parameters.INTERFACE_DIV_ID = 'sljs-interface';
     })(Parameters = SLjs.Parameters || (SLjs.Parameters = {}));
-})(SLjs || (SLjs = {}));
-var SLjs;
-(function (SLjs) {
-    var settings;
-    (function (settings) {
-    })(settings = SLjs.settings || (SLjs.settings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
@@ -97,33 +98,34 @@ var SLjs;
 (function (SLjs) {
     var Application = (function () {
         function Application(config) {
-            SLjs.settings.config = config;
-            SLjs.settings.parentElement = document.getElementById(SLjs.settings.config.element);
-            SLjs.Interface.ConstructInterface();
+            SLjs.Config = config;
             this.constructData();
-            if (SLjs.settings.config.visitorName === null || SLjs.settings.config.visitorName === undefined) {
+            SLjs.Interface.ConstructInterface(document.getElementById(SLjs.Config.element));
+            if (SLjs.Config.visitorName === null || SLjs.Config.visitorName === undefined) {
                 SLjs.Interface.ConstructWelcomeWithName(function (visitorName) {
-                    console.log(visitorName);
+                    SLjs.Config.visitorName = visitorName;
+                    SLjs.Interface.ConstructConversationWindow();
                 });
             }
             else {
-                SLjs.settings.config.visitorName += ' (' + SLjs.settings.config.applicationName + ')';
+                SLjs.Config.visitorName += ' (' + SLjs.Config.applicationName + ')';
+                SLjs.Interface.ConstructConversationWindow();
             }
         }
         Application.prototype.constructData = function () {
-            if (SLjs.settings.config.useServerSideFeatures === null || SLjs.settings.config.useServerSideFeatures === undefined) {
-                SLjs.settings.config.useServerSideFeatures = false;
+            if (SLjs.Config.useServerSideFeatures === null || SLjs.Config.useServerSideFeatures === undefined) {
+                SLjs.Config.useServerSideFeatures = false;
             }
-            if (SLjs.settings.config.visitorIcon === null || SLjs.settings.config.visitorIcon === undefined) {
-                SLjs.settings.config.visitorIcon = ':red_circle:';
+            if (SLjs.Config.visitorIcon === null || SLjs.Config.visitorIcon === undefined) {
+                SLjs.Config.visitorIcon = ':red_circle:';
             }
-            if (SLjs.settings.config.applicationName === null || SLjs.settings.config.applicationName === undefined) {
-                SLjs.settings.config.applicationName = 'SL.js';
+            if (SLjs.Config.applicationName === null || SLjs.Config.applicationName === undefined) {
+                SLjs.Config.applicationName = 'SL.js';
             }
         };
         Application.prototype.sendInitialMessage = function (message) {
             var userDataPoints = [];
-            if (!SLjs.settings.config.useServerSideFeatures) {
+            if (!SLjs.Config.useServerSideFeatures) {
                 userDataPoints.push({
                     title: 'First message for this visit to the channel',
                     text: 'Reply to me using !v1 [message]',
@@ -133,10 +135,10 @@ var SLjs;
             var packet = {
                 attachments: userDataPoints,
                 text: message,
-                username: SLjs.settings.config.visitorName,
-                icon_emoji: SLjs.settings.config.visitorIcon
+                username: SLjs.Config.visitorName,
+                icon_emoji: SLjs.Config.visitorIcon
             };
-            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage, SLjs.settings.config);
+            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage, SLjs.Config);
         };
         Application.prototype.sendMessage = function (message) {
             if (!this.firstMessageSent) {
@@ -146,10 +148,10 @@ var SLjs;
             }
             var packet = {
                 text: message,
-                username: SLjs.settings.config.visitorName,
-                icon_emoji: SLjs.settings.config.visitorIcon
+                username: SLjs.Config.visitorName,
+                icon_emoji: SLjs.Config.visitorIcon
             };
-            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage, SLjs.settings.config);
+            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage, SLjs.Config);
         };
         return Application;
     })();

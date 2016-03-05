@@ -1,12 +1,16 @@
 ﻿module SLjs.Interface {
+    var ApplicationInterface: HTMLDivElement;
+    var ParentElement: HTMLElement;
+
     /**
      * Builds the parent interface that all objects will be rendered into
      */
-    export function ConstructInterface() {
-        settings.applicationInterface = document.createElement('div');
-        settings.applicationInterface.id = Parameters.INTERFACE_DIV_ID;
+    export function ConstructInterface(parentElement: HTMLElement) {
+        ApplicationInterface = document.createElement('div');
+        ApplicationInterface.id = Parameters.INTERFACE_DIV_ID;
 
-        settings.parentElement.appendChild(settings.applicationInterface);
+        ParentElement = parentElement;
+        ParentElement.appendChild(ApplicationInterface);
     }
 
     /**
@@ -14,19 +18,19 @@
      * @param callback Returns to the parent method so we can put their name into a variable and build the conversation window
      */
     export function ConstructWelcomeWithName(callback: (name: string) => any) {
-        settings.applicationInterface.className = 'welcome';
+        ApplicationInterface.className = 'welcome';
 
         var helloHeading = document.createElement('h2');
-        helloHeading.innerText = Strings.WELCOME_MSG.replace('%APPNAME%', settings.config.applicationName);
-        settings.applicationInterface.appendChild(helloHeading);
+        helloHeading.innerText = Strings.WELCOME_MSG.replace('%APPNAME%', Config.applicationName);
+        ApplicationInterface.appendChild(helloHeading);
 
         var nameHeading = document.createElement('h3');
         nameHeading.innerText = Strings.NAME_REQUIRED;
-        settings.applicationInterface.appendChild(nameHeading);
+        ApplicationInterface.appendChild(nameHeading);
 
         var nameInputBox = document.createElement('div');
         nameInputBox.className = 'welcome-input';
-        settings.applicationInterface.appendChild(nameInputBox);
+        ApplicationInterface.appendChild(nameInputBox);
 
         var nameInput = document.createElement('input');
         nameInput.placeholder = Strings.NAME_INPUT_PLACEHOLDER;
@@ -43,6 +47,11 @@
     }
 
     export function ConstructConversationWindow() {
+        ApplicationInterface.innerHTML = '';
+
+        var helloHeading = document.createElement('h2');
+        helloHeading.innerText = Strings.WELCOME_MSG.replace('%APPNAME%', Config.applicationName);
+        ApplicationInterface.appendChild(helloHeading);
 
     }
 }

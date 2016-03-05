@@ -4,29 +4,30 @@
 /// <reference path="app.interface.ts" />
 /// <reference path="app.parameters.ts" />
 /// <reference path="app.strings.ts" />
-/// <reference path="app.settings.ts" />
 
 /**
  * The base application that handles all primary SL.js functionality
  */
 module SLjs {
+    export var Config: Models.SLconfig;
+
     export class Application {
         firstMessageSent: boolean;
 
         constructor(config: Models.SLconfig) {
-            settings.config = config;
-            settings.parentElement = document.getElementById(settings.config.element);
-
-            Interface.ConstructInterface();
+            Config = config;
             this.constructData();
 
-            if (settings.config.visitorName === null || settings.config.visitorName === undefined) {
+            Interface.ConstructInterface(document.getElementById(Config.element));
+
+            if (Config.visitorName === null || Config.visitorName === undefined) {
                 Interface.ConstructWelcomeWithName(function (visitorName: string) {
-                    console.log(visitorName);
+                    Config.visitorName = visitorName;
+                    Interface.ConstructConversationWindow();
                 });
             } else {
-                settings.config.visitorName += ' (' + settings.config.applicationName + ')';
-                // Show the chat prompt
+                Config.visitorName += ' (' + Config.applicationName + ')';
+                Interface.ConstructConversationWindow();
             }
         }
 
@@ -35,16 +36,16 @@ module SLjs {
          * making sure that the user name and icon are set correctly
          */
         constructData() {
-            if (settings.config.useServerSideFeatures === null || settings.config.useServerSideFeatures === undefined) {
-                settings.config.useServerSideFeatures = false;
+            if (Config.useServerSideFeatures === null || Config.useServerSideFeatures === undefined) {
+                Config.useServerSideFeatures = false;
             }
 
-            if (settings.config.visitorIcon === null || settings.config.visitorIcon === undefined) {
-                settings.config.visitorIcon = ':red_circle:';
+            if (Config.visitorIcon === null || Config.visitorIcon === undefined) {
+                Config.visitorIcon = ':red_circle:';
             }
 
-            if (settings.config.applicationName === null || settings.config.applicationName === undefined) {
-                settings.config.applicationName = 'SL.js';
+            if (Config.applicationName === null || Config.applicationName === undefined) {
+                Config.applicationName = 'SL.js';
             }
         }
 
@@ -55,7 +56,7 @@ module SLjs {
         sendInitialMessage(message: string) {
             var userDataPoints: Models.SLAttachmentItem[] = [];
 
-            if (!settings.config.useServerSideFeatures) {
+            if (!Config.useServerSideFeatures) {
                 userDataPoints.push({
                     title: 'First message for this visit to the channel',
                     text: 'Reply to me using !v1 [message]',
@@ -66,11 +67,11 @@ module SLjs {
             var packet: Models.SLAttachment = {
                 attachments: userDataPoints,
                 text: message,
-                username: settings.config.visitorName,
-                icon_emoji: settings.config.visitorIcon
+                username: Config.visitorName,
+                icon_emoji: Config.visitorIcon
             }
 
-            Http.Action(packet, Endpoints.PostMessage, settings.config);
+            Http.Action(packet, Endpoints.PostMessage, Config);
         }
 
         /**
@@ -87,11 +88,11 @@ module SLjs {
 
             var packet: Models.SLMessage = {
                 text: message,
-                username: settings.config.visitorName,
-                icon_emoji: settings.config.visitorIcon
+                username: Config.visitorName,
+                icon_emoji: Config.visitorIcon
             };
 
-            Http.Action(packet, Endpoints.PostMessage, settings.config);
+            Http.Action(packet, Endpoints.PostMessage, Config);
         }
     }
 }
