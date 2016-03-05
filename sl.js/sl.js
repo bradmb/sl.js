@@ -45,7 +45,7 @@ var SLjs;
         function ConstructWelcomeWithName(callback) {
             SLjs.settings.applicationInterface.className = 'welcome';
             var helloHeading = document.createElement('h2');
-            helloHeading.innerText = SLjs.Strings.WELCOME_MSG;
+            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace('%APPNAME%', SLjs.settings.config.applicationName);
             SLjs.settings.applicationInterface.appendChild(helloHeading);
             var nameHeading = document.createElement('h3');
             nameHeading.innerText = SLjs.Strings.NAME_REQUIRED;
@@ -84,7 +84,7 @@ var SLjs;
 (function (SLjs) {
     var Strings;
     (function (Strings) {
-        Strings.WELCOME_MSG = 'Welcome to the site!';
+        Strings.WELCOME_MSG = 'Welcome to %APPNAME%!';
         Strings.NAME_REQUIRED = 'Before we begin? What can we call you during our conversation?';
         Strings.NAME_INPUT_PLACEHOLDER = 'Enter your name in here';
         Strings.NAME_INPUT_BUTTON = 'Continue on';

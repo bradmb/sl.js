@@ -10,7 +10,7 @@
         settings.applicationInterface.className = 'welcome';
 
         var helloHeading = document.createElement('h2');
-        helloHeading.innerText = Strings.WELCOME_MSG;
+        helloHeading.innerText = Strings.WELCOME_MSG.replace('%APPNAME%', settings.config.applicationName);
         settings.applicationInterface.appendChild(helloHeading);
 
         var nameHeading = document.createElement('h3');
