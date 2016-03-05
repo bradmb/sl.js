@@ -15,7 +15,7 @@
 
     // Strings for the welcome message asking for their name
     export var WELCOME_MSG: string = 'Welcome to ' + APP_NAME_PARAM + '!';
-    export var NAME_REQUIRED: string = 'Before we begin? What can we call you during our conversation?';
+    export var NAME_REQUIRED: string = 'During our conversation, what can we call you?';
     export var NAME_INPUT_PLACEHOLDER: string = 'Enter your name in here';
     export var NAME_INPUT_BUTTON: string = 'Continue on';
 }

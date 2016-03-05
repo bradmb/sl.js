@@ -95,7 +95,7 @@ var SLjs;
         Strings.VISITOR_ICON = ':red_circle:';
         Strings.APP_NAME_PARAM = '%APPNAME%';
         Strings.WELCOME_MSG = 'Welcome to ' + Strings.APP_NAME_PARAM + '!';
-        Strings.NAME_REQUIRED = 'Before we begin? What can we call you during our conversation?';
+        Strings.NAME_REQUIRED = 'During our conversation, what can we call you?';
         Strings.NAME_INPUT_PLACEHOLDER = 'Enter your name in here';
         Strings.NAME_INPUT_BUTTON = 'Continue on';
     })(Strings = SLjs.Strings || (SLjs.Strings = {}));
