@@ -22,7 +22,11 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="release\sl.js" />
     <Content Include="release\sl.js.css" />
+    <Content Include="release\sl.min.js">
+      <DependentUpon>sl.js</DependentUpon>
+    </Content>
     <Content Include="sl.testing.js" />
     <Content Include="index.html" />
     <Content Include="web.config" />
@@ -37,6 +41,7 @@
     <TypeScriptCompile Include="source\app.ts" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bundleconfig.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
