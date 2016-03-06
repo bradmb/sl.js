@@ -4,5 +4,11 @@
     "inputFiles": [
       "release/sl.js"
     ]
+  },
+  {
+    "outputFileName": "release/sl.js.css",
+    "inputFiles": [
+      "release/sl.js.css"
+    ]
   }
 ]

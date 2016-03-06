@@ -37,6 +37,8 @@
 }
 
 #sljs-interface .close-button button {
+    cursor: pointer;
+
     font-weight: bold;
     font-size: 10pt;
 
@@ -93,6 +95,8 @@
 }
 
 #sljs-interface.welcome .welcome-input button {
+    cursor: pointer;
+
     font-size: 15pt;
     font-weight: bold;
 

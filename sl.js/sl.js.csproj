@@ -24,6 +24,9 @@
   <ItemGroup>
     <Content Include="release\sl.js" />
     <Content Include="release\sl.js.css" />
+    <Content Include="release\sl.js.min.css">
+      <DependentUpon>sl.js.css</DependentUpon>
+    </Content>
     <Content Include="release\sl.min.js">
       <DependentUpon>sl.js</DependentUpon>
     </Content>
