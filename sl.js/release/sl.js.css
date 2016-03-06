@@ -21,8 +21,13 @@
     bottom: 0;
     left: 0;
     right: 0;
-
     margin: auto;
+
+    border: 2px solid rgba(74, 74, 74, 0.36);
+
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
 }
 
 #sljs-interface .close-button {
@@ -34,6 +39,14 @@
 #sljs-interface .close-button button {
     font-weight: bold;
     font-size: 10pt;
+
+    color: #808080;
+    border: 2px solid #d9d9d9;
+    background-color: #d9d9d9;
+
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
 
 #sljs-interface.welcome {
@@ -61,9 +74,18 @@
 
 #sljs-interface.welcome .welcome-input input {
     font-size: 20pt;
+
     padding: 10px;
     margin-bottom: 10px;
+
     width: 500px;
+
+    border: 2px solid #ffffff;
+    background-color: #ffffff;
+
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
 
 #sljs-interface.welcome .welcome-input input.validation-failed {
@@ -73,9 +95,15 @@
 #sljs-interface.welcome .welcome-input button {
     font-size: 15pt;
     font-weight: bold;
+
     padding: 10px;
     width: 520px;
+
     color: #ffffff;
     background-color: #ad0000;
-    border: solid 1px #808080;
+    border: solid 1px #ad0000;
+
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
