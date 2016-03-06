@@ -37,6 +37,7 @@ var SLjs;
     var Interface;
     (function (Interface) {
         var ApplicationInterface;
+        var ApplicationInterfaceBody;
         var ParentElement;
         function ConstructInterface(parentElement) {
             var wrapper = document.createElement('div');
@@ -47,7 +48,7 @@ var SLjs;
             ApplicationInterface.id = SLjs.Parameters.INTERFACE_DIV_ID;
             wrapper.appendChild(ApplicationInterface);
             var closeButtonBox = document.createElement('div');
-            closeButtonBox.className = 'close-button';
+            closeButtonBox.className = 'sljs-close-button';
             ApplicationInterface.appendChild(closeButtonBox);
             var closeButton = document.createElement('button');
             closeButton.innerText = 'x';
@@ -55,19 +56,21 @@ var SLjs;
                 ParentElement.innerHTML = '';
             };
             closeButtonBox.appendChild(closeButton);
+            ApplicationInterfaceBody = document.createElement('div');
+            ApplicationInterface.appendChild(ApplicationInterfaceBody);
         }
         Interface.ConstructInterface = ConstructInterface;
         function ConstructWelcomeWithName(callback) {
-            ApplicationInterface.className = 'welcome';
+            ApplicationInterface.className = 'sljs-welcome';
             var helloHeading = document.createElement('h2');
             helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace(SLjs.Strings.APP_NAME_PARAM, SLjs.Config.applicationName);
-            ApplicationInterface.appendChild(helloHeading);
+            ApplicationInterfaceBody.appendChild(helloHeading);
             var nameHeading = document.createElement('h3');
             nameHeading.innerText = SLjs.Strings.NAME_REQUIRED;
-            ApplicationInterface.appendChild(nameHeading);
+            ApplicationInterfaceBody.appendChild(nameHeading);
             var nameInputBox = document.createElement('div');
-            nameInputBox.className = 'welcome-input';
-            ApplicationInterface.appendChild(nameInputBox);
+            nameInputBox.className = 'sljs-welcome-input';
+            ApplicationInterfaceBody.appendChild(nameInputBox);
             var nameInput = document.createElement('input');
             nameInput.placeholder = SLjs.Strings.NAME_INPUT_PLACEHOLDER;
             nameInputBox.appendChild(nameInput);
@@ -77,7 +80,7 @@ var SLjs;
             nameInputBtn.type = 'button';
             nameInputBtn.onclick = function () {
                 if (nameInput.value.trim() == '') {
-                    nameHeading.className = 'validation-failed';
+                    nameHeading.className = 'sljs-validation-failed';
                     nameHeading.innerText = SLjs.Strings.NAME_INPUT_VALIDATION_ERROR;
                     nameInput.className = 'validation-failed';
                     nameInput.focus();
@@ -89,10 +92,11 @@ var SLjs;
         }
         Interface.ConstructWelcomeWithName = ConstructWelcomeWithName;
         function ConstructConversationWindow() {
-            ApplicationInterface.innerHTML = '';
+            ApplicationInterface.className = 'sljs-chat';
+            ApplicationInterfaceBody.innerHTML = '';
             var helloHeading = document.createElement('h2');
             helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace(SLjs.Strings.APP_NAME_PARAM, SLjs.Config.applicationName);
-            ApplicationInterface.appendChild(helloHeading);
+            ApplicationInterfaceBody.appendChild(helloHeading);
         }
         Interface.ConstructConversationWindow = ConstructConversationWindow;
     })(Interface = SLjs.Interface || (SLjs.Interface = {}));

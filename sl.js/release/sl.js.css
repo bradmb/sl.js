@@ -30,13 +30,13 @@
     border-radius: 10px;
 }
 
-#sljs-interface .close-button {
+#sljs-interface .sljs-close-button {
     position: absolute;
     right: 10px;
     top: 10px;
 }
 
-#sljs-interface .close-button button {
+#sljs-interface .sljs-close-button button {
     cursor: pointer;
 
     font-weight: bold;
@@ -51,30 +51,40 @@
     border-radius: 4px;
 }
 
-#sljs-interface.welcome {
+#sljs-interface.sljs-chat {
+    width: 600px;
+    height: 450px;
+}
+
+#sljs-interface.sljs-chat h2 {
+    text-align: center;
+
+}
+
+#sljs-interface.sljs-welcome {
     width: 600px;
     height: 250px;
 }
 
-#sljs-interface.welcome h2 {
+#sljs-interface.sljs-welcome h2 {
     text-align: center;
 
 }
 
-#sljs-interface.welcome h3 {
+#sljs-interface.sljs-welcome h3 {
     text-align: center;
     font-style: italic;
 }
 
-#sljs-interface.welcome h3.validation-failed {
+#sljs-interface.sljs-welcome h3.sljs-validation-failed {
     color: #ad0000;
 }
 
-#sljs-interface.welcome .welcome-input {
+#sljs-interface.sljs-welcome .sljs-welcome-input {
     text-align: center;
 }
 
-#sljs-interface.welcome .welcome-input input {
+#sljs-interface.sljs-welcome .sljs-welcome-input input {
     font-size: 20pt;
 
     padding: 10px;
@@ -90,11 +100,11 @@
     border-radius: 4px;
 }
 
-#sljs-interface.welcome .welcome-input input.validation-failed {
+#sljs-interface.sljs-welcome .sljs-welcome-input input.sljs-validation-failed {
     border-color: #ff0000;
 }
 
-#sljs-interface.welcome .welcome-input button {
+#sljs-interface.sljs-welcome .sljs-welcome-input button {
     cursor: pointer;
 
     font-size: 15pt;

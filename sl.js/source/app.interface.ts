@@ -1,5 +1,6 @@
 ﻿module SLjs.Interface {
     var ApplicationInterface: HTMLDivElement;
+    var ApplicationInterfaceBody: HTMLDivElement;
     var ParentElement: HTMLElement;
 
     /**
@@ -21,7 +22,7 @@
 
         // Wrapper for the button below
         var closeButtonBox = document.createElement('div');
-        closeButtonBox.className = 'close-button';
+        closeButtonBox.className = 'sljs-close-button';
         ApplicationInterface.appendChild(closeButtonBox);
 
         // Closes out of the application
@@ -31,6 +32,9 @@
             ParentElement.innerHTML = '';
         }
         closeButtonBox.appendChild(closeButton);
+
+        ApplicationInterfaceBody = document.createElement('div');
+        ApplicationInterface.appendChild(ApplicationInterfaceBody);
     }
 
     /**
@@ -38,22 +42,22 @@
      * @param callback Returns to the parent method so we can put their name into a variable and build the conversation window
      */
     export function ConstructWelcomeWithName(callback: (name: string) => any) {
-        ApplicationInterface.className = 'welcome';
+        ApplicationInterface.className = 'sljs-welcome';
         
         // The welcome message
         var helloHeading = document.createElement('h2');
         helloHeading.innerText = Strings.WELCOME_MSG.replace(Strings.APP_NAME_PARAM, Config.applicationName);
-        ApplicationInterface.appendChild(helloHeading);
+        ApplicationInterfaceBody.appendChild(helloHeading);
 
         // The message asking for their name
         var nameHeading = document.createElement('h3');
         nameHeading.innerText = Strings.NAME_REQUIRED;
-        ApplicationInterface.appendChild(nameHeading);
+        ApplicationInterfaceBody.appendChild(nameHeading);
 
         // The wrapper for the input box that will take their name
         var nameInputBox = document.createElement('div');
-        nameInputBox.className = 'welcome-input';
-        ApplicationInterface.appendChild(nameInputBox);
+        nameInputBox.className = 'sljs-welcome-input';
+        ApplicationInterfaceBody.appendChild(nameInputBox);
 
         // The actual input box that takes their name
         var nameInput = document.createElement('input');
@@ -67,7 +71,7 @@
         nameInputBtn.type = 'button';
         nameInputBtn.onclick = function () {
             if (nameInput.value.trim() == '') {
-                nameHeading.className = 'validation-failed';
+                nameHeading.className = 'sljs-validation-failed';
                 nameHeading.innerText = Strings.NAME_INPUT_VALIDATION_ERROR;
 
                 nameInput.className = 'validation-failed';
@@ -82,11 +86,12 @@
     }
 
     export function ConstructConversationWindow() {
-        ApplicationInterface.innerHTML = '';
+        ApplicationInterface.className = 'sljs-chat';
+        ApplicationInterfaceBody.innerHTML = '';
 
         var helloHeading = document.createElement('h2');
         helloHeading.innerText = Strings.WELCOME_MSG.replace(Strings.APP_NAME_PARAM, Config.applicationName);
-        ApplicationInterface.appendChild(helloHeading);
+        ApplicationInterfaceBody.appendChild(helloHeading);
 
     }
 }
