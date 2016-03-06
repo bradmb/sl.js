@@ -332,7 +332,7 @@ var SLjs;
         Strings.FIRST_MESSAGE_HEADER = "First message for this visit to the channel";
         Strings.MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
         Strings.ATTACHMENT_COLOR = "#D00000";
-        Strings.VISITOR_ICON = ":red_circle:";
+        Strings.VISITOR_ICON = ":speech_balloon:";
         Strings.WELCOME_MSG = "Welcome to " + Strings.APP_NAME + "!";
         Strings.NAME_REQUIRED = "During our conversation, what can we call you?";
         Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";

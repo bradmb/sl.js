@@ -68,7 +68,7 @@
 }
 
 #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item {
-    padding: 10px 45px 10px 10px;
+    padding: 10px 45px 10px 0;
     min-height: 40px;
 
     font-size: 12pt;
@@ -76,7 +76,9 @@
 }
 
 #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item.sljs-chat-item-important {
+    padding-left: 10px;
     font-weight: lighter;
+    border-bottom: dotted 1px #bbbbbb;
     border-bottom: dotted 1px rgba(74, 74, 74, 0.36);
 }
 
@@ -104,20 +106,10 @@
     float: left;
     margin-right: 10px;
 
-    -webkit-filter: grayscale(1);
-    filter: gray;
-    filter: grayscale(1);
-
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
 }
-
-/*#sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-message-item:nth-child(odd) {
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
-}*/
 
 #sljs-interface.sljs-chat .sljs-chat-message-input {
     font-size: 12pt;

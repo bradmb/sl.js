@@ -12,7 +12,7 @@
     export var ATTACHMENT_COLOR = "#D00000";
 
     // default value strings (unless overridden in config)
-    export var VISITOR_ICON = ":red_circle:";
+    export var VISITOR_ICON = ":speech_balloon:";
 
     // strings for the welcome message asking for their name
     export var WELCOME_MSG: string = "Welcome to " + APP_NAME + "!";
