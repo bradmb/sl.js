@@ -39,10 +39,13 @@ var SLjs;
         var ApplicationInterface;
         var ParentElement;
         function ConstructInterface(parentElement) {
+            var wrapper = document.createElement('div');
+            wrapper.id = SLjs.Parameters.INTERFACE_WRAPPER_DIV_ID;
+            ParentElement = parentElement;
+            ParentElement.appendChild(wrapper);
             ApplicationInterface = document.createElement('div');
             ApplicationInterface.id = SLjs.Parameters.INTERFACE_DIV_ID;
-            ParentElement = parentElement;
-            ParentElement.appendChild(ApplicationInterface);
+            wrapper.appendChild(ApplicationInterface);
         }
         Interface.ConstructInterface = ConstructInterface;
         function ConstructWelcomeWithName(callback) {
@@ -90,6 +93,7 @@ var SLjs;
     var Parameters;
     (function (Parameters) {
         Parameters.INTERFACE_DIV_ID = 'sljs-interface';
+        Parameters.INTERFACE_WRAPPER_DIV_ID = 'sljs-wrapper';
     })(Parameters = SLjs.Parameters || (SLjs.Parameters = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;

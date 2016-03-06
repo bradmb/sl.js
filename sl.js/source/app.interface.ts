@@ -6,11 +6,16 @@
      * Builds the parent interface that all objects will be rendered into
      */
     export function ConstructInterface(parentElement: HTMLElement) {
+        var wrapper = document.createElement('div');
+        wrapper.id = Parameters.INTERFACE_WRAPPER_DIV_ID;
+
+        ParentElement = parentElement;
+        ParentElement.appendChild(wrapper);
+
         ApplicationInterface = document.createElement('div');
         ApplicationInterface.id = Parameters.INTERFACE_DIV_ID;
 
-        ParentElement = parentElement;
-        ParentElement.appendChild(ApplicationInterface);
+        wrapper.appendChild(ApplicationInterface);
     }
 
     /**
