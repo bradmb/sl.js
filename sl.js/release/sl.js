@@ -22,14 +22,14 @@ var SLjs;
                     break;
                 case "message":
                     var messageData = msgPreParse;
-                    if (messageData.username !== undefined && messageData.username == SLjs.Config.visitorName) {
+                    if (messageData.username !== undefined && messageData.username === SLjs.Config.visitorName) {
                         SLjs.Interface.AddChatMessage({
                             icon_emoji: messageData.icons.image_64,
                             text: messageData.text,
                             username: "You"
                         });
                     }
-                    else if (messageData.text.substr(0, SLjs.VisitorId.length + 1) == "!" + SLjs.VisitorId) {
+                    else if (messageData.text.substr(0, SLjs.VisitorId.length + 1) === "!" + SLjs.VisitorId) {
                         var user = SLjs.Users[messageData.user];
                         SLjs.Interface.AddChatMessage({
                             icon_emoji: user.image,
@@ -145,10 +145,10 @@ var SLjs;
             chatInputBox.className = "sljs-chat-message-input";
             chatInputBox.placeholder = SLjs.Strings.CHAT_INPUT_PLACEHOLDER;
             chatInputBox.onkeypress = function (key) {
-                if (key.charCode == 13 && key.shiftKey) {
+                if (key.charCode === 13 && key.shiftKey) {
                     return true;
                 }
-                else if (key.charCode == 13) {
+                else if (key.charCode === 13) {
                     SLjs.Messaging.SendMessage(chatInputBox.value);
                     chatInputBox.value = "";
                     return false;
@@ -166,8 +166,9 @@ var SLjs;
         function AddChatMessage(message) {
             var urlRegexMatch = SLjs.Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
             while (urlRegexMatch != null) {
-                if (urlRegexMatch == null)
+                if (urlRegexMatch == null) {
                     return;
+                }
                 var link = document.createElement("a");
                 link.href = urlRegexMatch[1];
                 link.text = urlRegexMatch[1];
@@ -177,7 +178,7 @@ var SLjs;
             }
             if (message.username.length > 1) {
                 message.username = message.username.charAt(0).toUpperCase() + message.username.slice(1);
-                if (message.username.indexOf(" ") != -1) {
+                if (message.username.indexOf(" ") !== -1) {
                     message.username = message.username.split(" ")[0];
                 }
             }
@@ -202,10 +203,12 @@ var SLjs;
                     messageIcon.src = chatMsg.icon_emoji;
                     messageBox.appendChild(messageIcon);
                 }
-                if (chatMsg.username != SLjs.Strings.APP_NAME) {
+                if (chatMsg.username !== SLjs.Strings.APP_NAME) {
                     var messageSender = document.createElement("div");
                     messageSender.className = "sljs-chat-item-sender";
-                    messageSender.innerText = chatMsg.username != "You" ? chatMsg.username + ' @ ' + SLjs.Config.supportGroupName : chatMsg.username;
+                    messageSender.innerText = chatMsg.username !== "You" ?
+                        chatMsg.username + " @ " + SLjs.Config.supportGroupName :
+                        chatMsg.username;
                     messageBox.appendChild(messageSender);
                 }
                 var messageBody = document.createElement("div");
@@ -221,7 +224,6 @@ var SLjs;
     var Messaging;
     (function (Messaging) {
         "use strict";
-        var firstMessageSent;
         function SendMessage(message) {
             if (!this.firstMessageSent) {
                 this.firstMessageSent = true;

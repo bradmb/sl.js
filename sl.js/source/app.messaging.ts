@@ -1,8 +1,6 @@
 ﻿module SLjs.Messaging {
     "use strict";
 
-    var firstMessageSent: boolean;
-
     /**
      * Sends a standard message to the support channel
      * @param message The text that you want to be sent into the channel
