@@ -46,6 +46,15 @@ var SLjs;
             ApplicationInterface = document.createElement('div');
             ApplicationInterface.id = SLjs.Parameters.INTERFACE_DIV_ID;
             wrapper.appendChild(ApplicationInterface);
+            var closeButtonBox = document.createElement('div');
+            closeButtonBox.className = 'close-button';
+            ApplicationInterface.appendChild(closeButtonBox);
+            var closeButton = document.createElement('button');
+            closeButton.innerText = 'x';
+            closeButton.onclick = function () {
+                ParentElement.innerHTML = '';
+            };
+            closeButtonBox.appendChild(closeButton);
         }
         Interface.ConstructInterface = ConstructInterface;
         function ConstructWelcomeWithName(callback) {

@@ -25,6 +25,17 @@
     margin: auto;
 }
 
+#sljs-interface .close-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+#sljs-interface .close-button button {
+    font-weight: bold;
+    font-size: 10pt;
+}
+
 #sljs-interface.welcome {
     width: 600px;
     height: 250px;
