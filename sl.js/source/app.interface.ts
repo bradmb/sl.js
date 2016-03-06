@@ -4,6 +4,8 @@
     var ApplicationInterface: HTMLDivElement;
     var ApplicationInterfaceBody: HTMLDivElement;
     var ParentElement: HTMLElement;
+    var ChatMessageBox: HTMLDivElement;
+    var ChatMessageBoxItems: Models.ISLMessage[] = [];
 
     /**
      * Builds the parent interface that all objects will be rendered into
@@ -48,7 +50,7 @@
 
         // the welcome message
         var helloHeading = document.createElement("h2");
-        helloHeading.innerText = Strings.WELCOME_MSG.replace(Strings.APP_NAME_PARAM, Config.applicationName);
+        helloHeading.innerText = Strings.WELCOME_MSG;
         ApplicationInterfaceBody.appendChild(helloHeading);
 
         // the message asking for their name
@@ -91,9 +93,29 @@
         ApplicationInterface.className = "sljs-chat";
         ApplicationInterfaceBody.innerHTML = "";
 
-        var helloHeading = document.createElement("h2");
-        helloHeading.innerText = Strings.WELCOME_MSG.replace(Strings.APP_NAME_PARAM, Config.applicationName);
-        ApplicationInterfaceBody.appendChild(helloHeading);
+        ChatMessageBox = document.createElement("div");
+        ChatMessageBox.className = "sljs-chat-messages";
 
+        ApplicationInterfaceBody.appendChild(ChatMessageBox);
+    }
+
+    export function AddChatMessage(message: Models.ISLMessage) {
+        ChatMessageBoxItems.push(message);
+        if (ChatMessageBoxItems.length > 10) {
+            ChatMessageBoxItems.shift();
+        }
+
+        RenderChatMessages();
+    }
+
+    function RenderChatMessages() {
+        ChatMessageBox.innerHTML = "";
+
+        for (var chatMsg of ChatMessageBoxItems) {
+            var messageItem = document.createElement("div");
+            messageItem.innerHTML = chatMsg.text;
+
+            ChatMessageBox.appendChild(messageItem);
+        }
     }
 }

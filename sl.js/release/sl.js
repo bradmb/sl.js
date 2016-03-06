@@ -24,7 +24,12 @@ var SLjs;
                 case "message":
                     var messageData = msgPreParse;
                     var user = SLjs.Users[messageData.user];
-                    console.log(user.name + ' said: ' + messageData.text);
+                    SLjs.Interface.AddChatMessage({
+                        icon_emoji: user.image,
+                        text: messageData.text,
+                        username: user.name
+                    });
+                    console.log(user.name + " said: " + messageData.text);
                     break;
             }
         }
@@ -69,6 +74,8 @@ var SLjs;
         var ApplicationInterface;
         var ApplicationInterfaceBody;
         var ParentElement;
+        var ChatMessageBox;
+        var ChatMessageBoxItems = [];
         function ConstructInterface(parentElement) {
             var wrapper = document.createElement("div");
             wrapper.id = SLjs.Parameters.INTERFACE_WRAPPER_DIV_ID;
@@ -93,7 +100,7 @@ var SLjs;
         function ConstructWelcomeWithName(callback) {
             ApplicationInterface.className = "sljs-welcome";
             var helloHeading = document.createElement("h2");
-            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace(SLjs.Strings.APP_NAME_PARAM, SLjs.Config.applicationName);
+            helloHeading.innerText = SLjs.Strings.WELCOME_MSG;
             ApplicationInterfaceBody.appendChild(helloHeading);
             var nameHeading = document.createElement("h3");
             nameHeading.innerText = SLjs.Strings.NAME_REQUIRED;
@@ -124,11 +131,28 @@ var SLjs;
         function ConstructConversationWindow() {
             ApplicationInterface.className = "sljs-chat";
             ApplicationInterfaceBody.innerHTML = "";
-            var helloHeading = document.createElement("h2");
-            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace(SLjs.Strings.APP_NAME_PARAM, SLjs.Config.applicationName);
-            ApplicationInterfaceBody.appendChild(helloHeading);
+            ChatMessageBox = document.createElement("div");
+            ChatMessageBox.className = "sljs-chat-messages";
+            ApplicationInterfaceBody.appendChild(ChatMessageBox);
         }
         Interface.ConstructConversationWindow = ConstructConversationWindow;
+        function AddChatMessage(message) {
+            ChatMessageBoxItems.push(message);
+            if (ChatMessageBoxItems.length > 10) {
+                ChatMessageBoxItems.shift();
+            }
+            RenderChatMessages();
+        }
+        Interface.AddChatMessage = AddChatMessage;
+        function RenderChatMessages() {
+            ChatMessageBox.innerHTML = "";
+            for (var _i = 0; _i < ChatMessageBoxItems.length; _i++) {
+                var chatMsg = ChatMessageBoxItems[_i];
+                var messageItem = document.createElement("div");
+                messageItem.innerHTML = chatMsg.text;
+                ChatMessageBox.appendChild(messageItem);
+            }
+        }
     })(Interface = SLjs.Interface || (SLjs.Interface = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
@@ -162,7 +186,15 @@ var SLjs;
             };
             SLjs.Http.Action(packet, SLjs.Endpoints.WebSocketStart, function (response) {
                 var responsePacket = JSON.parse(response);
-                callback(responsePacket);
+                for (var _i = 0, _a = responsePacket.users; _i < _a.length; _i++) {
+                    var user = _a[_i];
+                    SLjs.Users[user.id] = {
+                        name: user.real_name !== "" ? user.real_name : user.name,
+                        presence: user.presence,
+                        image: user.profile.image_24
+                    };
+                }
+                callback(responsePacket.url);
             });
         };
         Socket.prototype.ConnectWebSocket = function (url) {
@@ -186,22 +218,25 @@ var SLjs;
     var Strings;
     (function (Strings) {
         "use strict";
-        Strings.APP_NAME = "SL.js";
+        Strings.INTERNAL_APP_NAME = "SL.js";
+        Strings.APP_NAME = Strings.INTERNAL_APP_NAME;
         Strings.FIRST_MESSAGE_HEADER = "First message for this visit to the channel";
         Strings.MESSAGE_REPLY_HINT = "Reply to me using !v1 [message]";
         Strings.ATTACHMENT_COLOR = "#D00000";
         Strings.VISITOR_ICON = ":red_circle:";
-        Strings.APP_NAME_PARAM = "%APPNAME%";
-        Strings.WELCOME_MSG = "Welcome to " + Strings.APP_NAME_PARAM + "!";
+        Strings.WELCOME_MSG = "Welcome to " + Strings.APP_NAME + "!";
         Strings.NAME_REQUIRED = "During our conversation, what can we call you?";
         Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";
         Strings.NAME_INPUT_VALIDATION_ERROR = "Sorry, can you try entering your name in again?";
         Strings.NAME_INPUT_BUTTON = "Continue";
+        Strings.INITIAL_MSG = "Welcome to the support channel for " + Strings.APP_NAME +
+            ". Please ask your question in this channel and someone will get back to you shortly.";
     })(Strings = SLjs.Strings || (SLjs.Strings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
     "use strict";
+    SLjs.Config = { applicationName: SLjs.Strings.APP_NAME, channel: null, element: null, token: null, useServerSideFeatures: null, visitorIcon: null, visitorName: null };
     SLjs.Users = {};
     var Application = (function () {
         function Application(config) {
@@ -212,24 +247,18 @@ var SLjs;
                 SLjs.Interface.ConstructWelcomeWithName(function (visitorName) {
                     SLjs.Config.visitorName = visitorName;
                     SLjs.Interface.ConstructConversationWindow();
+                    var socket = new SLjs.Socket();
+                    socket.GetWebSocketData(function (webSocketUrl) {
+                        socket.ConnectWebSocket(webSocketUrl);
+                    });
                 });
             }
             else {
                 SLjs.Config.visitorName += " (" + SLjs.Config.applicationName + ")";
                 SLjs.Interface.ConstructConversationWindow();
                 var socket = new SLjs.Socket();
-                socket.GetWebSocketData(function (socketData) {
-                    for (var user in socketData.users) {
-                        if (socketData.users.hasOwnProperty(user)) {
-                            var userData = socketData.users[user];
-                            SLjs.Users[userData.id] = {
-                                name: userData.real_name !== "" ? userData.real_name : userData.name,
-                                presence: userData.presence,
-                                image: userData.profile.image_24
-                            };
-                        }
-                    }
-                    socket.ConnectWebSocket(socketData.url);
+                socket.GetWebSocketData(function (webSocketUrl) {
+                    socket.ConnectWebSocket(webSocketUrl);
                 });
             }
         }
@@ -242,6 +271,9 @@ var SLjs;
             }
             if (SLjs.Config.applicationName === null || SLjs.Config.applicationName === undefined) {
                 SLjs.Config.applicationName = SLjs.Strings.APP_NAME;
+            }
+            else {
+                SLjs.Strings.APP_NAME = SLjs.Config.applicationName;
             }
         };
         Application.prototype.sendInitialMessage = function (message) {

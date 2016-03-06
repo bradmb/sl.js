@@ -11,7 +11,7 @@
 module SLjs {
     "use strict";
 
-    export var Config: Models.ISLconfig;
+    export var Config: Models.ISLconfig = { applicationName: Strings.APP_NAME, channel: null, element: null, token: null, useServerSideFeatures: null, visitorIcon: null, visitorName: null };
     export var Users: Models.ISLSupportUser[] = <any>{};
 
     export class Application {
@@ -27,25 +27,19 @@ module SLjs {
                 Interface.ConstructWelcomeWithName(function (visitorName: string) {
                     Config.visitorName = visitorName;
                     Interface.ConstructConversationWindow();
+
+                    var socket = new Socket();
+                    socket.GetWebSocketData(function (webSocketUrl: string) {
+                        socket.ConnectWebSocket(webSocketUrl);
+                    });
                 });
             } else {
                 Config.visitorName += " (" + Config.applicationName + ")";
                 Interface.ConstructConversationWindow();
-                
-                var socket = new Socket();
-                socket.GetWebSocketData(function (socketData: Models.ISLWebsocketAuthResponse) {
-                    for (var user in socketData.users) {
-                        if (socketData.users.hasOwnProperty(user)) {
-                            var userData = socketData.users[user];
-                            Users[userData.id] = <Models.ISLSupportUser>{
-                                name: userData.real_name !== "" ? userData.real_name : userData.name,
-                                presence: userData.presence,
-                                image: userData.profile.image_24
-                            };
-                        }
-                    }
 
-                    socket.ConnectWebSocket(socketData.url);
+                var socket = new Socket();
+                socket.GetWebSocketData(function (webSocketUrl: string) {
+                    socket.ConnectWebSocket(webSocketUrl);
                 });
             }
         }
@@ -65,6 +59,8 @@ module SLjs {
 
             if (Config.applicationName === null || Config.applicationName === undefined) {
                 Config.applicationName = Strings.APP_NAME;
+            } else {
+                Strings.APP_NAME = Config.applicationName;
             }
         }
 

@@ -12,9 +12,15 @@
                 break;
             case "message":
                 var messageData: Models.ISLSocketMessage = msgPreParse;
-                var user = (Users[messageData.user] as Models.ISLSupportUser)
+                var user = (Users[messageData.user] as Models.ISLSupportUser);
 
-                console.log(user.name + ' said: ' + messageData.text);
+                Interface.AddChatMessage({
+                    icon_emoji: user.image,
+                    text: messageData.text,
+                    username: user.name
+                });
+
+                console.log(user.name + " said: " + messageData.text);
                 break;
         }
     }
