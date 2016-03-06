@@ -3,6 +3,7 @@
 
     // global application strings
     export var INTERNAL_APP_NAME = "SL.js";
+    export var INTERNAL_SUPPORT_GROUP_NAME = "Support Team";
     export var APP_NAME = INTERNAL_APP_NAME;
 
     // info message strings sent in message packets to Slack
@@ -21,6 +22,7 @@
     export var NAME_INPUT_BUTTON: string = "Continue";
 
     // strings for the chat discussion
-    export var INITIAL_MSG: string = "Welcome to the support channel for " + APP_NAME +
-                                     ". Please ask your question in this channel and someone will get back to you shortly.";
+    export var CHAT_INPUT_PLACEHOLDER: string = "Enter your message here. Use SHIFT+ENTER to create a new line.";
+    export var CHAT_INITIAL_MSG: string = "Welcome to the support channel for " + APP_NAME +
+                                           ". Please ask your question in this channel and someone will get back to you shortly.";
 }

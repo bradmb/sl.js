@@ -39,6 +39,7 @@
     <TypeScriptCompile Include="source\app.events.ts" />
     <TypeScriptCompile Include="source\app.http.ts" />
     <TypeScriptCompile Include="source\app.interface.ts" />
+    <TypeScriptCompile Include="source\app.messaging.ts" />
     <TypeScriptCompile Include="source\app.models.ts" />
     <TypeScriptCompile Include="source\app.parameters.ts" />
     <TypeScriptCompile Include="source\app.strings.ts" />

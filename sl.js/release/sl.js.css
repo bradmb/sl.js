@@ -34,7 +34,7 @@
 
 #sljs-interface .sljs-close-button {
     position: absolute;
-    right: 10px;
+    right: 20px;
     top: 10px;
 }
 
@@ -60,7 +60,65 @@
 
 #sljs-interface.sljs-chat h2 {
     text-align: center;
+}
 
+#sljs-interface.sljs-chat .sljs-chat-messages {
+    height: 350px;
+    overflow: auto;
+}
+
+#sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item {
+    font-size: 10pt;
+    padding: 10px 30px 10px 10px;
+    min-height: 30px;
+}
+
+#sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item a {
+    color: #ff2f00;
+    font-size: 10pt;
+}
+
+#sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item .sljs-chat-item-sender {
+    margin-top: -5px;
+    font-size: 12pt;
+    font-weight: bold;
+    color: #ff2f00;
+}
+
+#sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item .sljs-chat-item-icon {
+    width: 40px;
+    float: left;
+    margin-right: 10px;
+
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+/*#sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-message-item:nth-child(odd) {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}*/
+
+#sljs-interface.sljs-chat .sljs-chat-message-input {
+    font-size: 12pt;
+    color: #484848;
+
+    padding: 10px;
+    margin: 3px 0 0 5px;
+
+    width: 565px;
+    height: 65px;
+
+    resize: none;
+
+    border: 2px solid #ffffff;
+    background-color: #ffffff;
+
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
 }
 
 #sljs-interface.sljs-welcome {

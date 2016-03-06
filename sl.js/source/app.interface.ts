@@ -95,11 +95,58 @@
 
         ChatMessageBox = document.createElement("div");
         ChatMessageBox.className = "sljs-chat-messages";
-
         ApplicationInterfaceBody.appendChild(ChatMessageBox);
+
+        var chatInputBox = document.createElement("textarea");
+        chatInputBox.className = "sljs-chat-message-input";
+        chatInputBox.placeholder = Strings.CHAT_INPUT_PLACEHOLDER;
+
+        chatInputBox.onkeypress = function (key: KeyboardEvent) {
+            if (key.charCode == 13 && key.shiftKey) {
+                return true;
+            } else if (key.charCode == 13) {
+                Messaging.SendMessage(chatInputBox.value);
+                chatInputBox.value = "";
+
+                return false;
+            }
+
+            return true;
+        }
+
+        ApplicationInterfaceBody.appendChild(chatInputBox);
+
+        AddChatMessage({
+            text: Strings.CHAT_INITIAL_MSG,
+            username: Strings.APP_NAME,
+            icon_emoji: null
+        });
     }
 
     export function AddChatMessage(message: Models.ISLMessage) {
+        var urlRegexMatch = Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
+        while (urlRegexMatch != null) {
+            if (urlRegexMatch == null) return;
+
+            var link = document.createElement("a");
+            link.href = urlRegexMatch[1];
+            link.text = urlRegexMatch[1];
+            link.target = "_blank";
+
+            message.text = message.text.replace(urlRegexMatch[0], link.outerHTML);
+            urlRegexMatch = Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
+        }
+
+        if (message.username.length > 1) {
+            message.username = message.username.charAt(0).toUpperCase() + message.username.slice(1);
+
+            if (message.username.indexOf(" ") != -1) {
+                message.username = message.username.split(" ")[0];
+            }
+        }
+
+        message.text = message.text.replace("\n", document.createElement("br").outerHTML);
+
         ChatMessageBoxItems.push(message);
         if (ChatMessageBoxItems.length > 10) {
             ChatMessageBoxItems.shift();
@@ -112,10 +159,28 @@
         ChatMessageBox.innerHTML = "";
 
         for (var chatMsg of ChatMessageBoxItems) {
-            var messageItem = document.createElement("div");
-            messageItem.innerHTML = chatMsg.text;
+            var messageBox = document.createElement("div");
+            messageBox.className = "sljs-chat-item";
+            ChatMessageBox.appendChild(messageBox);
 
-            ChatMessageBox.appendChild(messageItem);
+            if (chatMsg.icon_emoji != null) {
+                var messageIcon = document.createElement("img");
+                messageIcon.className = "sljs-chat-item-icon";
+                messageIcon.src = chatMsg.icon_emoji;
+                messageBox.appendChild(messageIcon);
+            }
+            
+            if (chatMsg.username != Strings.APP_NAME) {
+                var messageSender = document.createElement("div");
+                messageSender.className = "sljs-chat-item-sender";
+                messageSender.innerText = chatMsg.username != "You" ? chatMsg.username + ' @ ' + Config.supportGroupName : chatMsg.username;
+                messageBox.appendChild(messageSender);
+            }
+
+            var messageBody = document.createElement("div");
+            messageBody.className = "sljs-chat-item-body";
+            messageBody.innerHTML = chatMsg.text;
+            messageBox.appendChild(messageBody);
         }
     }
 }

@@ -15,7 +15,6 @@ var SLjs;
         "use strict";
         function OnMessageReceived(message) {
             var msgPreParse = JSON.parse(message);
-            console.log(msgPreParse);
             switch (msgPreParse.type) {
                 case "presence_change":
                     var presenceData = msgPreParse;
@@ -23,13 +22,21 @@ var SLjs;
                     break;
                 case "message":
                     var messageData = msgPreParse;
-                    var user = SLjs.Users[messageData.user];
-                    SLjs.Interface.AddChatMessage({
-                        icon_emoji: user.image,
-                        text: messageData.text,
-                        username: user.name
-                    });
-                    console.log(user.name + " said: " + messageData.text);
+                    if (messageData.username !== undefined && messageData.username == SLjs.Config.visitorName) {
+                        SLjs.Interface.AddChatMessage({
+                            icon_emoji: messageData.icons.image_64,
+                            text: messageData.text,
+                            username: "You"
+                        });
+                    }
+                    else {
+                        var user = SLjs.Users[messageData.user];
+                        SLjs.Interface.AddChatMessage({
+                            icon_emoji: user.image,
+                            text: messageData.text,
+                            username: user.name
+                        });
+                    }
                     break;
             }
         }
@@ -134,9 +141,47 @@ var SLjs;
             ChatMessageBox = document.createElement("div");
             ChatMessageBox.className = "sljs-chat-messages";
             ApplicationInterfaceBody.appendChild(ChatMessageBox);
+            var chatInputBox = document.createElement("textarea");
+            chatInputBox.className = "sljs-chat-message-input";
+            chatInputBox.placeholder = SLjs.Strings.CHAT_INPUT_PLACEHOLDER;
+            chatInputBox.onkeypress = function (key) {
+                if (key.charCode == 13 && key.shiftKey) {
+                    return true;
+                }
+                else if (key.charCode == 13) {
+                    SLjs.Messaging.SendMessage(chatInputBox.value);
+                    chatInputBox.value = "";
+                    return false;
+                }
+                return true;
+            };
+            ApplicationInterfaceBody.appendChild(chatInputBox);
+            AddChatMessage({
+                text: SLjs.Strings.CHAT_INITIAL_MSG,
+                username: SLjs.Strings.APP_NAME,
+                icon_emoji: null
+            });
         }
         Interface.ConstructConversationWindow = ConstructConversationWindow;
         function AddChatMessage(message) {
+            var urlRegexMatch = SLjs.Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
+            while (urlRegexMatch != null) {
+                if (urlRegexMatch == null)
+                    return;
+                var link = document.createElement("a");
+                link.href = urlRegexMatch[1];
+                link.text = urlRegexMatch[1];
+                link.target = "_blank";
+                message.text = message.text.replace(urlRegexMatch[0], link.outerHTML);
+                urlRegexMatch = SLjs.Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
+            }
+            if (message.username.length > 1) {
+                message.username = message.username.charAt(0).toUpperCase() + message.username.slice(1);
+                if (message.username.indexOf(" ") != -1) {
+                    message.username = message.username.split(" ")[0];
+                }
+            }
+            message.text = message.text.replace("\n", document.createElement("br").outerHTML);
             ChatMessageBoxItems.push(message);
             if (ChatMessageBoxItems.length > 10) {
                 ChatMessageBoxItems.shift();
@@ -148,12 +193,67 @@ var SLjs;
             ChatMessageBox.innerHTML = "";
             for (var _i = 0; _i < ChatMessageBoxItems.length; _i++) {
                 var chatMsg = ChatMessageBoxItems[_i];
-                var messageItem = document.createElement("div");
-                messageItem.innerHTML = chatMsg.text;
-                ChatMessageBox.appendChild(messageItem);
+                var messageBox = document.createElement("div");
+                messageBox.className = "sljs-chat-item";
+                ChatMessageBox.appendChild(messageBox);
+                if (chatMsg.icon_emoji != null) {
+                    var messageIcon = document.createElement("img");
+                    messageIcon.className = "sljs-chat-item-icon";
+                    messageIcon.src = chatMsg.icon_emoji;
+                    messageBox.appendChild(messageIcon);
+                }
+                if (chatMsg.username != SLjs.Strings.APP_NAME) {
+                    var messageSender = document.createElement("div");
+                    messageSender.className = "sljs-chat-item-sender";
+                    messageSender.innerText = chatMsg.username != "You" ? chatMsg.username + ' @ ' + SLjs.Config.supportGroupName : chatMsg.username;
+                    messageBox.appendChild(messageSender);
+                }
+                var messageBody = document.createElement("div");
+                messageBody.className = "sljs-chat-item-body";
+                messageBody.innerHTML = chatMsg.text;
+                messageBox.appendChild(messageBody);
             }
         }
     })(Interface = SLjs.Interface || (SLjs.Interface = {}));
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    var Messaging;
+    (function (Messaging) {
+        "use strict";
+        var firstMessageSent;
+        function SendMessage(message) {
+            if (!this.firstMessageSent) {
+                this.firstMessageSent = true;
+                SendInitialMessage(message);
+                return;
+            }
+            var packet = {
+                text: message,
+                username: SLjs.Config.visitorName,
+                icon_emoji: SLjs.Config.visitorIcon
+            };
+            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage);
+        }
+        Messaging.SendMessage = SendMessage;
+        function SendInitialMessage(message) {
+            var userDataPoints = [];
+            if (!SLjs.Config.useServerSideFeatures) {
+                userDataPoints.push({
+                    title: SLjs.Strings.FIRST_MESSAGE_HEADER,
+                    text: SLjs.Strings.MESSAGE_REPLY_HINT,
+                    color: SLjs.Strings.ATTACHMENT_COLOR
+                });
+            }
+            var packet = {
+                attachments: userDataPoints,
+                text: message,
+                username: SLjs.Config.visitorName,
+                icon_emoji: SLjs.Config.visitorIcon
+            };
+            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage);
+        }
+    })(Messaging = SLjs.Messaging || (SLjs.Messaging = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
@@ -167,6 +267,7 @@ var SLjs;
     var Parameters;
     (function (Parameters) {
         "use strict";
+        Parameters.REGEX_URL_MATCH_QUERY = /<([^><a]+)>/g;
         Parameters.INTERFACE_DIV_ID = "sljs-interface";
         Parameters.INTERFACE_WRAPPER_DIV_ID = "sljs-wrapper";
     })(Parameters = SLjs.Parameters || (SLjs.Parameters = {}));
@@ -191,7 +292,7 @@ var SLjs;
                     SLjs.Users[user.id] = {
                         name: user.real_name !== "" ? user.real_name : user.name,
                         presence: user.presence,
-                        image: user.profile.image_24
+                        image: user.profile.image_72
                     };
                 }
                 callback(responsePacket.url);
@@ -219,6 +320,7 @@ var SLjs;
     (function (Strings) {
         "use strict";
         Strings.INTERNAL_APP_NAME = "SL.js";
+        Strings.INTERNAL_SUPPORT_GROUP_NAME = "Support Team";
         Strings.APP_NAME = Strings.INTERNAL_APP_NAME;
         Strings.FIRST_MESSAGE_HEADER = "First message for this visit to the channel";
         Strings.MESSAGE_REPLY_HINT = "Reply to me using !v1 [message]";
@@ -229,14 +331,15 @@ var SLjs;
         Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";
         Strings.NAME_INPUT_VALIDATION_ERROR = "Sorry, can you try entering your name in again?";
         Strings.NAME_INPUT_BUTTON = "Continue";
-        Strings.INITIAL_MSG = "Welcome to the support channel for " + Strings.APP_NAME +
+        Strings.CHAT_INPUT_PLACEHOLDER = "Enter your message here. Use SHIFT+ENTER to create a new line.";
+        Strings.CHAT_INITIAL_MSG = "Welcome to the support channel for " + Strings.APP_NAME +
             ". Please ask your question in this channel and someone will get back to you shortly.";
     })(Strings = SLjs.Strings || (SLjs.Strings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
     "use strict";
-    SLjs.Config = { applicationName: SLjs.Strings.APP_NAME, channel: null, element: null, token: null, useServerSideFeatures: null, visitorIcon: null, visitorName: null };
+    SLjs.Config = { applicationName: SLjs.Strings.APP_NAME, channel: null, element: null, token: null };
     SLjs.Users = {};
     var Application = (function () {
         function Application(config) {
@@ -275,36 +378,9 @@ var SLjs;
             else {
                 SLjs.Strings.APP_NAME = SLjs.Config.applicationName;
             }
-        };
-        Application.prototype.sendInitialMessage = function (message) {
-            var userDataPoints = [];
-            if (!SLjs.Config.useServerSideFeatures) {
-                userDataPoints.push({
-                    title: SLjs.Strings.FIRST_MESSAGE_HEADER,
-                    text: SLjs.Strings.MESSAGE_REPLY_HINT,
-                    color: SLjs.Strings.ATTACHMENT_COLOR
-                });
+            if (SLjs.Config.supportGroupName === null || SLjs.Config.supportGroupName === undefined) {
+                SLjs.Config.supportGroupName = SLjs.Strings.INTERNAL_SUPPORT_GROUP_NAME;
             }
-            var packet = {
-                attachments: userDataPoints,
-                text: message,
-                username: SLjs.Config.visitorName,
-                icon_emoji: SLjs.Config.visitorIcon
-            };
-            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage);
-        };
-        Application.prototype.sendMessage = function (message) {
-            if (!this.firstMessageSent) {
-                this.firstMessageSent = true;
-                this.sendInitialMessage(message);
-                return;
-            }
-            var packet = {
-                text: message,
-                username: SLjs.Config.visitorName,
-                icon_emoji: SLjs.Config.visitorIcon
-            };
-            SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage);
         };
         return Application;
     })();

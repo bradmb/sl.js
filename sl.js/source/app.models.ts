@@ -8,6 +8,7 @@
   *                       used for clearly identifying where this user is coming from
   * @param useServerSideFeatures If true, we will route requests through a server. In
   *                              this case, your webhookUrl parameter should be your server instead of Slack
+  * @param supportGroupName The title displayed next to the users who are responding from Slack
   */
 module SLjs.Models {
     "use strict";
@@ -20,6 +21,7 @@ module SLjs.Models {
         element: string;
         applicationName?: string;
         useServerSideFeatures?: boolean;
+        supportGroupName?: string;
     }
 
     export interface ISLMessage {
@@ -87,5 +89,21 @@ module SLjs.Models {
         ts: string;
         type: string;
         user: string;
+        username: string;
+        icons: ISLSocketMessageIcon;
+    }
+
+    export interface ISLSocketMessageChanged {
+        channel: string;
+        event_ts: string;
+        message: ISLSocketMessage;
+        ts: string;
+        type: string;
+        subtype: string;
+    }
+
+    export interface ISLSocketMessageIcon {
+        emoji: string;
+        image_64: string;
     }
 }

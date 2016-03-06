@@ -21,7 +21,7 @@
                     Users[user.id] = <Models.ISLSupportUser>{
                         name: user.real_name !== "" ? user.real_name : user.name,
                         presence: user.presence,
-                        image: user.profile.image_24
+                        image: user.profile.image_72
                     };
                 }
 
