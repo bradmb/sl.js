@@ -22,6 +22,7 @@ module SLjs.Models {
     }
 
     export interface ISLMessage {
+        isImportantMessage?: boolean;
         text: string;
         username: string;
         icon_emoji: string;

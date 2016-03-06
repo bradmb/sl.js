@@ -119,7 +119,8 @@
         AddChatMessage({
             text: Strings.CHAT_INITIAL_MSG,
             username: Strings.APP_NAME,
-            icon_emoji: null
+            icon_emoji: null,
+            isImportantMessage: true
         });
     }
 
@@ -163,6 +164,11 @@
         for (var chatMsg of ChatMessageBoxItems) {
             var messageBox = document.createElement("div");
             messageBox.className = "sljs-chat-item";
+
+            if (chatMsg.isImportantMessage !== undefined && chatMsg.isImportantMessage !== null) {
+                messageBox.className += " sljs-chat-item-important";
+            }
+
             ChatMessageBox.appendChild(messageBox);
 
             if (chatMsg.icon_emoji != null) {
@@ -174,7 +180,10 @@
 
             if (chatMsg.username !== Strings.APP_NAME) {
                 var messageSender = document.createElement("div");
-                messageSender.className = "sljs-chat-item-sender";
+                messageSender.className = chatMsg.username !== "You" ?
+                                          "sljs-chat-item-support" :
+                                          "sljs-chat-item-sender";
+
                 messageSender.innerText = chatMsg.username !== "You" ?
                                           chatMsg.username + " @ " + Config.supportGroupName :
                                           chatMsg.username;
@@ -187,5 +196,7 @@
             messageBody.innerHTML = chatMsg.text;
             messageBox.appendChild(messageBody);
         }
+
+        ChatMessageBox.scrollTop = ChatMessageBox.scrollHeight;
     }
 }

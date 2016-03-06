@@ -159,7 +159,8 @@ var SLjs;
             AddChatMessage({
                 text: SLjs.Strings.CHAT_INITIAL_MSG,
                 username: SLjs.Strings.APP_NAME,
-                icon_emoji: null
+                icon_emoji: null,
+                isImportantMessage: true
             });
         }
         Interface.ConstructConversationWindow = ConstructConversationWindow;
@@ -196,6 +197,9 @@ var SLjs;
                 var chatMsg = ChatMessageBoxItems[_i];
                 var messageBox = document.createElement("div");
                 messageBox.className = "sljs-chat-item";
+                if (chatMsg.isImportantMessage !== undefined && chatMsg.isImportantMessage !== null) {
+                    messageBox.className += " sljs-chat-item-important";
+                }
                 ChatMessageBox.appendChild(messageBox);
                 if (chatMsg.icon_emoji != null) {
                     var messageIcon = document.createElement("img");
@@ -205,7 +209,9 @@ var SLjs;
                 }
                 if (chatMsg.username !== SLjs.Strings.APP_NAME) {
                     var messageSender = document.createElement("div");
-                    messageSender.className = "sljs-chat-item-sender";
+                    messageSender.className = chatMsg.username !== "You" ?
+                        "sljs-chat-item-support" :
+                        "sljs-chat-item-sender";
                     messageSender.innerText = chatMsg.username !== "You" ?
                         chatMsg.username + " @ " + SLjs.Config.supportGroupName :
                         chatMsg.username;
@@ -216,6 +222,7 @@ var SLjs;
                 messageBody.innerHTML = chatMsg.text;
                 messageBox.appendChild(messageBody);
             }
+            ChatMessageBox.scrollTop = ChatMessageBox.scrollHeight;
         }
     })(Interface = SLjs.Interface || (SLjs.Interface = {}));
 })(SLjs || (SLjs = {}));
@@ -271,6 +278,48 @@ var SLjs;
         Parameters.INTERFACE_DIV_ID = "sljs-interface";
         Parameters.INTERFACE_WRAPPER_DIV_ID = "sljs-wrapper";
     })(Parameters = SLjs.Parameters || (SLjs.Parameters = {}));
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    "use strict";
+    var Socket = (function () {
+        function Socket() {
+        }
+        Socket.prototype.GetWebSocketData = function (callback) {
+            var packet = {
+                mpim_aware: false,
+                no_unreads: true,
+                simple_latest: true,
+                token: SLjs.Config.token
+            };
+            SLjs.Http.Action(packet, SLjs.Endpoints.WebSocketStart, function (response) {
+                var responsePacket = JSON.parse(response);
+                for (var _i = 0, _a = responsePacket.users; _i < _a.length; _i++) {
+                    var user = _a[_i];
+                    SLjs.Users[user.id] = {
+                        name: user.real_name !== "" ? user.real_name : user.name,
+                        presence: user.presence,
+                        image: user.profile.image_72
+                    };
+                }
+                callback(responsePacket.url);
+            });
+        };
+        Socket.prototype.ConnectWebSocket = function (url) {
+            var connection = new WebSocket(url);
+            connection.onopen = function (event) {
+            };
+            connection.onmessage = function (message) {
+                SLjs.Events.OnMessageReceived(message.data);
+            };
+            connection.onerror = function (event) {
+            };
+            connection.onclose = function (event) {
+            };
+        };
+        return Socket;
+    })();
+    SLjs.Socket = Socket;
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
@@ -346,47 +395,5 @@ var SLjs;
         return Application;
     })();
     SLjs.Application = Application;
-})(SLjs || (SLjs = {}));
-var SLjs;
-(function (SLjs) {
-    "use strict";
-    var Socket = (function () {
-        function Socket() {
-        }
-        Socket.prototype.GetWebSocketData = function (callback) {
-            var packet = {
-                mpim_aware: false,
-                no_unreads: true,
-                simple_latest: true,
-                token: SLjs.Config.token
-            };
-            SLjs.Http.Action(packet, SLjs.Endpoints.WebSocketStart, function (response) {
-                var responsePacket = JSON.parse(response);
-                for (var _i = 0, _a = responsePacket.users; _i < _a.length; _i++) {
-                    var user = _a[_i];
-                    SLjs.Users[user.id] = {
-                        name: user.real_name !== "" ? user.real_name : user.name,
-                        presence: user.presence,
-                        image: user.profile.image_72
-                    };
-                }
-                callback(responsePacket.url);
-            });
-        };
-        Socket.prototype.ConnectWebSocket = function (url) {
-            var connection = new WebSocket(url);
-            connection.onopen = function (event) {
-            };
-            connection.onmessage = function (message) {
-                SLjs.Events.OnMessageReceived(message.data);
-            };
-            connection.onerror = function (event) {
-            };
-            connection.onclose = function (event) {
-            };
-        };
-        return Socket;
-    })();
-    SLjs.Socket = Socket;
 })(SLjs || (SLjs = {}));
 //# sourceMappingURL=sl.js.map
