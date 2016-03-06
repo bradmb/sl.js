@@ -48,13 +48,7 @@ module SLjs {
          * making sure that the user name and icon are set correctly
          */
         constructData() {
-            if (Config.useServerSideFeatures === null || Config.useServerSideFeatures === undefined) {
-                Config.useServerSideFeatures = false;
-            }
-
-            if (!Config.useServerSideFeatures) {
-                VisitorId = this.generateVisitorId();
-            }
+            VisitorId = this.generateVisitorId();
 
             if (Config.visitorIcon === null || Config.visitorIcon === undefined) {
                 Config.visitorIcon = Strings.VISITOR_ICON;

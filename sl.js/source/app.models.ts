@@ -6,8 +6,6 @@
   * @param visitorIcon The icon to use for displaying next to the user's message. Will default to a predefined image if left null/undefined
   * @param applicatioName The name that appears next to the user's name in the channel,
   *                       used for clearly identifying where this user is coming from
-  * @param useServerSideFeatures If true, we will route requests through a server. In
-  *                              this case, your webhookUrl parameter should be your server instead of Slack
   * @param supportGroupName The title displayed next to the users who are responding from Slack
   */
 module SLjs.Models {
@@ -20,7 +18,6 @@ module SLjs.Models {
         visitorIcon?: string;
         element: string;
         applicationName?: string;
-        useServerSideFeatures?: boolean;
         supportGroupName?: string;
     }
 

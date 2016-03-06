@@ -29,13 +29,11 @@
     function SendInitialMessage(message: string) {
         var userDataPoints: Models.ISLAttachmentItem[] = [];
 
-        if (!Config.useServerSideFeatures) {
-            userDataPoints.push({
-                title: "",
-                text: Strings.MESSAGE_REPLY_HINT.replace("%VISITORID%", VisitorId),
-                color: Strings.ATTACHMENT_COLOR
-            });
-        }
+        userDataPoints.push({
+            title: "",
+            text: Strings.MESSAGE_REPLY_HINT.replace("%VISITORID%", VisitorId),
+            color: Strings.ATTACHMENT_COLOR
+        });
 
         var packet: Models.ISLAttachment = {
             attachments: userDataPoints,
