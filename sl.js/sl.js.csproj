@@ -42,6 +42,7 @@
     <TypeScriptCompile Include="source\app.parameters.ts" />
     <TypeScriptCompile Include="source\app.strings.ts" />
     <TypeScriptCompile Include="source\app.ts" />
+    <TypeScriptCompile Include="source\app.socket.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bundleconfig.json" />

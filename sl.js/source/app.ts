@@ -9,12 +9,15 @@
  * The base application that handles all primary SL.js functionality
  */
 module SLjs {
-    export var Config: Models.SLconfig;
+    "use strict";
+
+    export var Config: Models.ISLconfig;
+    export var Users: Models.ISLSupportUser[] = <any>{};
 
     export class Application {
         firstMessageSent: boolean;
 
-        constructor(config: Models.SLconfig) {
+        constructor(config: Models.ISLconfig) {
             Config = config;
             this.constructData();
 
@@ -26,8 +29,24 @@ module SLjs {
                     Interface.ConstructConversationWindow();
                 });
             } else {
-                Config.visitorName += ' (' + Config.applicationName + ')';
+                Config.visitorName += " (" + Config.applicationName + ")";
                 Interface.ConstructConversationWindow();
+
+                var socket = new Socket();
+                socket.GetWebSocketData(function (socketData: Models.ISLWebsocketAuthResponse) {
+                    for (var user in socketData.users) {
+                        if (socketData.users.hasOwnProperty(user)) {
+                            var userData = socketData.users[user];
+                            Users[userData.id] = {
+                                name: userData.real_name !== "" ? userData.real_name : userData.name,
+                                presence: userData.presence,
+                                image: userData.profile.image_24
+                            };
+                        }
+                    }
+
+                    socket.ConnectWebSocket(socketData.url);
+                });
             }
         }
 
@@ -54,7 +73,7 @@ module SLjs {
          * @param message The text that you want to be sent into the channel
          */
         sendInitialMessage(message: string) {
-            var userDataPoints: Models.SLAttachmentItem[] = [];
+            var userDataPoints: Models.ISLAttachmentItem[] = [];
 
             if (!Config.useServerSideFeatures) {
                 userDataPoints.push({
@@ -64,14 +83,14 @@ module SLjs {
                 });
             }
 
-            var packet: Models.SLAttachment = {
+            var packet: Models.ISLAttachment = {
                 attachments: userDataPoints,
                 text: message,
                 username: Config.visitorName,
                 icon_emoji: Config.visitorIcon
-            }
+            };
 
-            Http.Action(packet, Endpoints.PostMessage, Config);
+            Http.Action(packet, Endpoints.PostMessage);
         }
 
         /**
@@ -86,13 +105,13 @@ module SLjs {
                 return;
             }
 
-            var packet: Models.SLMessage = {
+            var packet: Models.ISLMessage = {
                 text: message,
                 username: Config.visitorName,
                 icon_emoji: Config.visitorIcon
             };
 
-            Http.Action(packet, Endpoints.PostMessage, Config);
+            Http.Action(packet, Endpoints.PostMessage);
         }
     }
 }
