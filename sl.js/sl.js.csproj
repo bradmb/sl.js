@@ -36,6 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="source\app.endpoints.ts" />
+    <TypeScriptCompile Include="source\app.events.ts" />
     <TypeScriptCompile Include="source\app.http.ts" />
     <TypeScriptCompile Include="source\app.interface.ts" />
     <TypeScriptCompile Include="source\app.models.ts" />

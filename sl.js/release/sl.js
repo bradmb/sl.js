@@ -10,6 +10,29 @@ var SLjs;
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
+    var Events;
+    (function (Events) {
+        "use strict";
+        function OnMessageReceived(message) {
+            var msgPreParse = JSON.parse(message);
+            console.log(msgPreParse);
+            switch (msgPreParse.type) {
+                case "presence_change":
+                    var presenceData = msgPreParse;
+                    SLjs.Users[presenceData.user].presence = presenceData.presence;
+                    break;
+                case "message":
+                    var messageData = msgPreParse;
+                    var user = SLjs.Users[messageData.user];
+                    console.log(user.name + ' said: ' + messageData.text);
+                    break;
+            }
+        }
+        Events.OnMessageReceived = OnMessageReceived;
+    })(Events = SLjs.Events || (SLjs.Events = {}));
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
     var Http;
     (function (Http) {
         "use strict";
@@ -145,20 +168,13 @@ var SLjs;
         Socket.prototype.ConnectWebSocket = function (url) {
             var connection = new WebSocket(url);
             connection.onopen = function (event) {
-                console.log("ws:connection opened");
-                console.log(event);
             };
             connection.onmessage = function (message) {
-                console.log("ws:message received");
-                console.log(message);
+                SLjs.Events.OnMessageReceived(message.data);
             };
             connection.onerror = function (event) {
-                console.log("ws:connection error");
-                console.log(event);
             };
             connection.onclose = function (event) {
-                console.log("ws:connection closed");
-                console.log(event);
             };
         };
         return Socket;

@@ -22,24 +22,24 @@
 
         ConnectWebSocket(url: string) {
             var connection = new WebSocket(url);
+
             connection.onopen = function (event: Event) {
-                console.log("ws:connection opened");
-                console.log(event);
+                //console.log("ws:connection opened");
+                //console.log(event);
             };
 
             connection.onmessage = function (message: MessageEvent) {
-                console.log("ws:message received");
-                console.log(message);
+                Events.OnMessageReceived(message.data);
             };
 
             connection.onerror = function (event: Event) {
-                console.log("ws:connection error");
-                console.log(event);
+                //console.log("ws:connection error");
+                //console.log(event);
             };
 
             connection.onclose = function (event: CloseEvent) {
-                console.log("ws:connection closed");
-                console.log(event);
+                //console.log("ws:connection closed");
+                //console.log(event);
             };
         }
     }

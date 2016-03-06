@@ -74,4 +74,18 @@ module SLjs.Models {
         presence: string;
         image: string;
     }
+
+    export interface ISLSocketPresenceChange {
+        user: string;
+        presence: string;
+    }
+
+    export interface ISLSocketMessage {
+        channel: string;
+        reply_to: number;
+        text: string;
+        ts: string;
+        type: string;
+        user: string;
+    }
 }

@@ -31,13 +31,13 @@ module SLjs {
             } else {
                 Config.visitorName += " (" + Config.applicationName + ")";
                 Interface.ConstructConversationWindow();
-
+                
                 var socket = new Socket();
                 socket.GetWebSocketData(function (socketData: Models.ISLWebsocketAuthResponse) {
                     for (var user in socketData.users) {
                         if (socketData.users.hasOwnProperty(user)) {
                             var userData = socketData.users[user];
-                            Users[userData.id] = {
+                            Users[userData.id] = <Models.ISLSupportUser>{
                                 name: userData.real_name !== "" ? userData.real_name : userData.name,
                                 presence: userData.presence,
                                 image: userData.profile.image_24
