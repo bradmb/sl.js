@@ -29,11 +29,11 @@ var SLjs;
                             username: "You"
                         });
                     }
-                    else {
+                    else if (messageData.text.substr(0, SLjs.VisitorId.length + 1) == "!" + SLjs.VisitorId) {
                         var user = SLjs.Users[messageData.user];
                         SLjs.Interface.AddChatMessage({
                             icon_emoji: user.image,
-                            text: messageData.text,
+                            text: messageData.text.replace("!" + SLjs.VisitorId, ""),
                             username: user.name
                         });
                     }
@@ -240,8 +240,8 @@ var SLjs;
             var userDataPoints = [];
             if (!SLjs.Config.useServerSideFeatures) {
                 userDataPoints.push({
-                    title: SLjs.Strings.FIRST_MESSAGE_HEADER,
-                    text: SLjs.Strings.MESSAGE_REPLY_HINT,
+                    title: "",
+                    text: SLjs.Strings.MESSAGE_REPLY_HINT.replace("%VISITORID%", SLjs.VisitorId),
                     color: SLjs.Strings.ATTACHMENT_COLOR
                 });
             }
@@ -323,7 +323,7 @@ var SLjs;
         Strings.INTERNAL_SUPPORT_GROUP_NAME = "Support Team";
         Strings.APP_NAME = Strings.INTERNAL_APP_NAME;
         Strings.FIRST_MESSAGE_HEADER = "First message for this visit to the channel";
-        Strings.MESSAGE_REPLY_HINT = "Reply to me using !v1 [message]";
+        Strings.MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
         Strings.ATTACHMENT_COLOR = "#D00000";
         Strings.VISITOR_ICON = ":red_circle:";
         Strings.WELCOME_MSG = "Welcome to " + Strings.APP_NAME + "!";
@@ -357,7 +357,7 @@ var SLjs;
                 });
             }
             else {
-                SLjs.Config.visitorName += " (" + SLjs.Config.applicationName + ")";
+                SLjs.Config.visitorName = "[" + SLjs.VisitorId + "] " + SLjs.Config.visitorName + " (" + SLjs.Config.applicationName + ")";
                 SLjs.Interface.ConstructConversationWindow();
                 var socket = new SLjs.Socket();
                 socket.GetWebSocketData(function (webSocketUrl) {
@@ -368,6 +368,9 @@ var SLjs;
         Application.prototype.constructData = function () {
             if (SLjs.Config.useServerSideFeatures === null || SLjs.Config.useServerSideFeatures === undefined) {
                 SLjs.Config.useServerSideFeatures = false;
+            }
+            if (!SLjs.Config.useServerSideFeatures) {
+                SLjs.VisitorId = this.generateVisitorId();
             }
             if (SLjs.Config.visitorIcon === null || SLjs.Config.visitorIcon === undefined) {
                 SLjs.Config.visitorIcon = SLjs.Strings.VISITOR_ICON;
@@ -381,6 +384,11 @@ var SLjs;
             if (SLjs.Config.supportGroupName === null || SLjs.Config.supportGroupName === undefined) {
                 SLjs.Config.supportGroupName = SLjs.Strings.INTERNAL_SUPPORT_GROUP_NAME;
             }
+        };
+        Application.prototype.generateVisitorId = function () {
+            var currentDate = new Date();
+            var uniqueId = currentDate.getMilliseconds() + "" + Math.floor((Math.random() * 10) + 1);
+            return uniqueId;
         };
         return Application;
     })();

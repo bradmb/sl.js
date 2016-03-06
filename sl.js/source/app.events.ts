@@ -18,12 +18,12 @@
                         text: messageData.text,
                         username: "You"
                     });
-                } else {
+                } else if (messageData.text.substr(0, VisitorId.length + 1) == "!" + VisitorId) {
                     var user = (Users[messageData.user] as Models.ISLSupportUser);
 
                     Interface.AddChatMessage({
                         icon_emoji: user.image,
-                        text: messageData.text,
+                        text: messageData.text.replace("!" + VisitorId, ""),
                         username: user.name
                     });
                 }

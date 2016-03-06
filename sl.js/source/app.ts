@@ -11,6 +11,7 @@
 module SLjs {
     "use strict";
 
+    export var VisitorId: string;
     export var Config: Models.ISLconfig = { applicationName: Strings.APP_NAME, channel: null, element: null, token: null };
     export var Users: Models.ISLSupportUser[] = <any>{};
 
@@ -32,7 +33,7 @@ module SLjs {
                     });
                 });
             } else {
-                Config.visitorName += " (" + Config.applicationName + ")";
+                Config.visitorName = "[" + VisitorId + "] " + Config.visitorName + " (" + Config.applicationName + ")";
                 Interface.ConstructConversationWindow();
 
                 var socket = new Socket();
@@ -51,6 +52,10 @@ module SLjs {
                 Config.useServerSideFeatures = false;
             }
 
+            if (!Config.useServerSideFeatures) {
+                VisitorId = this.generateVisitorId();
+            }
+
             if (Config.visitorIcon === null || Config.visitorIcon === undefined) {
                 Config.visitorIcon = Strings.VISITOR_ICON;
             }
@@ -64,6 +69,19 @@ module SLjs {
             if (Config.supportGroupName === null || Config.supportGroupName === undefined) {
                 Config.supportGroupName = Strings.INTERNAL_SUPPORT_GROUP_NAME;
             }
+        }
+
+        /**
+         * If you're not using server side features, then we need to use
+         * whatever data we have to make a unique (as close as possible) id
+         * that we can use to ensure this user only gets messages intended
+         * for them in the support interface
+         */
+        generateVisitorId(): string {
+            var currentDate = new Date();
+            var uniqueId = currentDate.getMilliseconds() + "" + Math.floor((Math.random() * 10) + 1);
+
+            return uniqueId;
         }
     }
 }

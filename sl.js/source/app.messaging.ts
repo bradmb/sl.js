@@ -33,8 +33,8 @@
 
         if (!Config.useServerSideFeatures) {
             userDataPoints.push({
-                title: Strings.FIRST_MESSAGE_HEADER,
-                text: Strings.MESSAGE_REPLY_HINT,
+                title: "",
+                text: Strings.MESSAGE_REPLY_HINT.replace("%VISITORID%", VisitorId),
                 color: Strings.ATTACHMENT_COLOR
             });
         }

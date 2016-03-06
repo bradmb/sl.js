@@ -8,7 +8,7 @@
 
     // info message strings sent in message packets to Slack
     export var FIRST_MESSAGE_HEADER = "First message for this visit to the channel";
-    export var MESSAGE_REPLY_HINT = "Reply to me using !v1 [message]";
+    export var MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
     export var ATTACHMENT_COLOR = "#D00000";
 
     // default value strings (unless overridden in config)
