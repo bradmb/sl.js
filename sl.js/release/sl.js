@@ -59,10 +59,18 @@ var SLjs;
             var nameInput = document.createElement('input');
             nameInput.placeholder = SLjs.Strings.NAME_INPUT_PLACEHOLDER;
             nameInputBox.appendChild(nameInput);
+            nameInput.focus();
             var nameInputBtn = document.createElement('button');
             nameInputBtn.innerText = SLjs.Strings.NAME_INPUT_BUTTON;
             nameInputBtn.type = 'button';
             nameInputBtn.onclick = function () {
+                if (nameInput.value.trim() == '') {
+                    nameHeading.className = 'validation-failed';
+                    nameHeading.innerText = SLjs.Strings.NAME_INPUT_VALIDATION_ERROR;
+                    nameInput.className = 'validation-failed';
+                    nameInput.focus();
+                    return;
+                }
                 callback(nameInput.value);
             };
             nameInputBox.appendChild(nameInputBtn);
@@ -97,7 +105,8 @@ var SLjs;
         Strings.WELCOME_MSG = 'Welcome to ' + Strings.APP_NAME_PARAM + '!';
         Strings.NAME_REQUIRED = 'During our conversation, what can we call you?';
         Strings.NAME_INPUT_PLACEHOLDER = 'Enter your name in here';
-        Strings.NAME_INPUT_BUTTON = 'Continue on';
+        Strings.NAME_INPUT_VALIDATION_ERROR = 'Sorry, can you try entering your name in again?';
+        Strings.NAME_INPUT_BUTTON = 'Continue';
     })(Strings = SLjs.Strings || (SLjs.Strings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;

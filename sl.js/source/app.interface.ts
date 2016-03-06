@@ -35,11 +35,21 @@
         var nameInput = document.createElement('input');
         nameInput.placeholder = Strings.NAME_INPUT_PLACEHOLDER;
         nameInputBox.appendChild(nameInput);
+        nameInput.focus();
 
         var nameInputBtn = document.createElement('button');
         nameInputBtn.innerText = Strings.NAME_INPUT_BUTTON;
         nameInputBtn.type = 'button';
         nameInputBtn.onclick = function () {
+            if (nameInput.value.trim() == '') {
+                nameHeading.className = 'validation-failed';
+                nameHeading.innerText = Strings.NAME_INPUT_VALIDATION_ERROR;
+
+                nameInput.className = 'validation-failed';
+                nameInput.focus();
+                return;
+            }
+
             callback(nameInput.value);
         };
 
