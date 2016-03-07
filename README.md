@@ -8,7 +8,7 @@ This script was designed based on a need I had to provide a simple Slack support
 ----------
 
 ## How to setup ##
-Grab a copy of the .js and .css files in the *release* folder and reference them in your code.
+Download a copy of the [latest release from the releases page](https://github.com/bradmb/sl.js/releases) and reference them in your code.
 
 You'll also need to grab your Slack token (or generate a new one) and locate the channel id for the Slack channel you want this script to run in.
 
