@@ -23,6 +23,9 @@
 
     // strings for the chat discussion
     export var CHAT_INPUT_PLACEHOLDER: string = "Enter your message here. Use SHIFT+ENTER to create a new line.";
+    export var CHAT_AFTER_HOURS_MSG: string = "Welcome to the support channel for " + APP_NAME + ". It is currently " +
+                                               "outside of standard support hours, so please leave a message and we " +
+                                               "will get back to you during standard business hours.";
     export var CHAT_INITIAL_MSG: string = "Welcome to the support channel for " + APP_NAME +
                                            ". Please ask your question in this channel and someone will get back to you shortly.";
 }

@@ -6,6 +6,7 @@
     var ParentElement: HTMLElement;
     var ChatMessageBox: HTMLDivElement;
     var ChatMessageBoxItems: Models.ISLMessage[] = [];
+    var ShowingWorkHourMessage: boolean;
 
     /**
      * Builds the parent interface that all objects will be rendered into
@@ -116,12 +117,25 @@
 
         ApplicationInterfaceBody.appendChild(chatInputBox);
 
-        AddChatMessage({
-            text: Strings.CHAT_INITIAL_MSG,
-            username: Strings.APP_NAME,
-            icon_emoji: null,
-            isImportantMessage: true
-        });
+        var workHours = new Hours.Validation();
+        if (workHours.IsDuringWorkHours()) {
+            ShowingWorkHourMessage = false;
+            AddChatMessage({
+                text: Strings.CHAT_INITIAL_MSG,
+                username: Strings.APP_NAME,
+                icon_emoji: null,
+                isImportantMessage: true
+            });
+        } else {
+            ShowingWorkHourMessage = true;
+            AddChatMessage({
+                text: Strings.CHAT_AFTER_HOURS_MSG,
+                username: Strings.APP_NAME,
+                icon_emoji: null,
+                isImportantMessage: true,
+                isErrorMessage: true
+            });
+        }
     }
 
     export function AddChatMessage(message: Models.ISLMessage) {
@@ -150,11 +164,12 @@
 
         message.text = message.text.replace("\n", document.createElement("br").outerHTML);
 
-        ChatMessageBoxItems.push(message);
-        if (ChatMessageBoxItems.length > 10) {
+        if (message.username !== "You" && ShowingWorkHourMessage && !message.isImportantMessage) {
+            ShowingWorkHourMessage = false;
             ChatMessageBoxItems.shift();
         }
 
+        ChatMessageBoxItems.push(message);
         RenderChatMessages();
     }
 
@@ -167,6 +182,10 @@
 
             if (chatMsg.isImportantMessage !== undefined && chatMsg.isImportantMessage !== null) {
                 messageBox.className += " sljs-chat-item-important";
+            }
+
+            if (chatMsg.isErrorMessage !== undefined && chatMsg.isErrorMessage !== null) {
+                messageBox.className += " sljs-chat-item-error";
             }
 
             ChatMessageBox.appendChild(messageBox);

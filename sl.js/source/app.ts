@@ -12,11 +12,11 @@ module SLjs {
     "use strict";
 
     export var VisitorId: string;
-    export var Config: Models.ISLconfig = { applicationName: Strings.APP_NAME, channel: null, element: null, token: null };
+    export var Config: Models.ISLConfig = { applicationName: Strings.APP_NAME, channel: null, element: null, token: null };
     export var Users: Models.ISLSupportUser[] = <any>{};
 
     export class Application {
-        constructor(config: Models.ISLconfig) {
+        constructor(config: Models.ISLConfig) {
             Config = config;
             this.constructData();
 
