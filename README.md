@@ -19,7 +19,7 @@ To bring up the interface, simply call this:
     var slConfig = {
         token: 'SLACK-TOKEN',
         channel: 'SLACK-CHANNEL',
-        element: 'PAGEE-DIV-ID'
+        element: 'PAGE-DIV-ID'
     };
 
     var sl = new SLjs.Application(slConfig);
