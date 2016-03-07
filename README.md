@@ -36,12 +36,11 @@ The configuration options listed above are the *minimum* options required. You a
 
 **workDates** [*object*]: Allows you to specify the standard work hours that support is generally available. This will not prevent users from submitting messages, but display a notice that support may not be available. By responding to the user in Slack, this notice will be removed so the user can have a normal support conversation.
 
-Start hour and stop hour must be provided using the UTC time zone.
+Start hour and stop hour must be provided using the UTC time zone. You can leave out a day of the week and it will consider that a non-working day.
 
 **Example parameter configuration for work dates**
 
     workDates: {
-        sunday: false,
         monday: true,
         tuesday: true,
         wednesday: true,
