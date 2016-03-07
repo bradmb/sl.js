@@ -26,13 +26,33 @@ To bring up the interface, simply call this:
 
 The configuration options listed above are the *minimum* options required. You are free to fill in additional parameters, including:
 
-**visitorName**: If filled out, the script will skip the question that asks the user for their name. Fill this in if you have some way to automatically identify a user's name
+**visitorName** [*string*]: If filled out, the script will skip the question that asks the user for their name. Fill this in if you have some way to automatically identify a user's name
  
-**visitorIcon**: This defaults to the *:speech_balloon:* emoji in Slack, but feel free to change this to any other emoji (default or custom) from your Slack instance.
+**visitorIcon** [*string*]: This defaults to the *:speech_balloon:* emoji in Slack, but feel free to change this to any other emoji (default or custom) from your Slack instance.
 
-**applicationName**: This will override the default application name (SL.js) with your own. It's recommended you fill this parameter out, as it will show up to the user and in your Slack channel, allowing multiple sites or pages to point at one Slack channel, while easily identifying where the visitor is coming from.
+**applicationName** [*string*]: This will override the default application name (SL.js) with your own. It's recommended you fill this parameter out, as it will show up to the user and in your Slack channel, allowing multiple sites or pages to point at one Slack channel, while easily identifying where the visitor is coming from.
 
-**supportGroupName**: This shows in the user support interface, and will show what team the user is talking to. When the interface shows messages coming from Slack, it will attempt to show the Slack user's first name only, followed by this support group name. By default, this will show "*Support Team*".
+**supportGroupName** [*string*]: This shows in the user support interface, and will show what team the user is talking to. When the interface shows messages coming from Slack, it will attempt to show the Slack user's first name only, followed by this support group name. By default, this will show "*Support Team*".
+
+**workDates** [*object*]: Allows you to specify the standard work hours that support is generally available. This will not prevent users from submitting messages, but display a notice that support may not be available. By responding to the user in Slack, this notice will be removed so the user can have a normal support conversation.
+
+Start hour and stop hour must be provided using the UTC time zone.
+
+**Example parameter configuration for work dates**
+
+    workDates: {
+        sunday: false,
+        monday: true,
+        tuesday: true,
+        wednesday: true,
+        thursday: true,
+        friday: true,
+        startHourUtc: 15,
+        startMinutes: 0,
+        stopHourUtc: 1,
+        stopMinutes: 30
+    }
+
 
 ----------
 
