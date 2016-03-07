@@ -73,5 +73,5 @@ The first message from a user sent from this interface will include a message at
 - Add server-side features (id generation, traffic routing)
 - Add additional display methods (docking to left/right of page)
 - Add button binding options
-- Add message editing
-- Add support work hours
+- Add support for parsing Slack message edits
+- ~~Add support work hours~~
