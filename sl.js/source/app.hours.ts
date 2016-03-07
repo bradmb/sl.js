@@ -2,6 +2,9 @@
     "use strict";
 
     export class Validation {
+        /**
+         * Validates that we are currently within the authorized work hours (if configured)
+         */
         IsDuringWorkHours(): boolean {
             if (Config.workDates === undefined || Config.workDates === null) {
                 return true;
@@ -53,16 +56,22 @@
             }
 
             var currentHourUtc = currentDate.getUTCHours();
-            if (Config.workDates.startHourUtc > currentHourUtc || Config.workDates.stopHourUtc < currentHourUtc) {
-                return false;
+            if (Config.workDates.stopHourUtc < Config.workDates.startHourUtc) {
+                if (Config.workDates.startHourUtc < currentHourUtc && Config.workDates.stopHourUtc > currentHourUtc) {
+                    return false;
+                }
+            } else {
+                if (Config.workDates.startHourUtc > currentHourUtc || Config.workDates.stopHourUtc < currentHourUtc) {
+                    return false;
+                }
             }
 
             var currentMinutes = currentDate.getMinutes();
-            if (Config.workDates.startHourUtc === currentHourUtc && Config.workDates.startMinutes > currentMinutes) {
+            if (Config.workDates.startHourUtc === currentHourUtc && Config.workDates.startMinutes >= currentMinutes) {
                 return false;
             }
 
-            if (Config.workDates.stopHourUtc === currentHourUtc && Config.workDates.stopMinutes < currentMinutes) {
+            if (Config.workDates.stopHourUtc === currentHourUtc && Config.workDates.stopMinutes <= currentMinutes) {
                 return false;
             }
 

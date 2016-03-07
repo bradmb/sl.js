@@ -16,6 +16,10 @@ module SLjs {
     export var Users: Models.ISLSupportUser[] = <any>{};
 
     export class Application {
+        /**
+         * Initializes the application and displays the interface
+         * @param config
+         */
         constructor(config: Models.ISLConfig) {
             Config = config;
             this.constructData();
@@ -24,7 +28,7 @@ module SLjs {
 
             if (Config.visitorName === null || Config.visitorName === undefined) {
                 Interface.ConstructWelcomeWithName(function (visitorName: string) {
-                    Config.visitorName = visitorName;
+                    Config.visitorName = "[" + VisitorId + "] " + visitorName + " (" + Config.applicationName + ")";
                     Interface.ConstructConversationWindow();
 
                     var socket = new Socket();

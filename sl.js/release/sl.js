@@ -98,14 +98,21 @@ var SLjs;
                     return false;
                 }
                 var currentHourUtc = currentDate.getUTCHours();
-                if (SLjs.Config.workDates.startHourUtc > currentHourUtc || SLjs.Config.workDates.stopHourUtc < currentHourUtc) {
-                    return false;
+                if (SLjs.Config.workDates.stopHourUtc < SLjs.Config.workDates.startHourUtc) {
+                    if (SLjs.Config.workDates.startHourUtc < currentHourUtc && SLjs.Config.workDates.stopHourUtc > currentHourUtc) {
+                        return false;
+                    }
+                }
+                else {
+                    if (SLjs.Config.workDates.startHourUtc > currentHourUtc || SLjs.Config.workDates.stopHourUtc < currentHourUtc) {
+                        return false;
+                    }
                 }
                 var currentMinutes = currentDate.getMinutes();
-                if (SLjs.Config.workDates.startHourUtc === currentHourUtc && SLjs.Config.workDates.startMinutes > currentMinutes) {
+                if (SLjs.Config.workDates.startHourUtc === currentHourUtc && SLjs.Config.workDates.startMinutes >= currentMinutes) {
                     return false;
                 }
-                if (SLjs.Config.workDates.stopHourUtc === currentHourUtc && SLjs.Config.workDates.stopMinutes < currentMinutes) {
+                if (SLjs.Config.workDates.stopHourUtc === currentHourUtc && SLjs.Config.workDates.stopMinutes <= currentMinutes) {
                     return false;
                 }
                 return true;
@@ -180,7 +187,7 @@ var SLjs;
         function ConstructWelcomeWithName(callback) {
             ApplicationInterface.className = "sljs-welcome";
             var helloHeading = document.createElement("h2");
-            helloHeading.innerText = SLjs.Strings.WELCOME_MSG;
+            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace("%APPNAME%", SLjs.Strings.APP_NAME);
             ApplicationInterfaceBody.appendChild(helloHeading);
             var nameHeading = document.createElement("h3");
             nameHeading.innerText = SLjs.Strings.NAME_REQUIRED;
@@ -191,6 +198,19 @@ var SLjs;
             var nameInput = document.createElement("input");
             nameInput.placeholder = SLjs.Strings.NAME_INPUT_PLACEHOLDER;
             nameInputBox.appendChild(nameInput);
+            nameInputBox.onkeypress = function (key) {
+                if (key.charCode === 13) {
+                    if (nameInput.value.trim() === "") {
+                        nameHeading.className = "sljs-validation-failed";
+                        nameHeading.innerText = SLjs.Strings.NAME_INPUT_VALIDATION_ERROR;
+                        nameInput.className = "validation-failed";
+                        nameInput.focus();
+                        return;
+                    }
+                    callback(nameInput.value);
+                }
+                return true;
+            };
             nameInput.focus();
             var nameInputBtn = document.createElement("button");
             nameInputBtn.innerText = SLjs.Strings.NAME_INPUT_BUTTON;
@@ -229,11 +249,12 @@ var SLjs;
                 return true;
             };
             ApplicationInterfaceBody.appendChild(chatInputBox);
+            chatInputBox.focus();
             var workHours = new SLjs.Hours.Validation();
             if (workHours.IsDuringWorkHours()) {
                 ShowingWorkHourMessage = false;
                 AddChatMessage({
-                    text: SLjs.Strings.CHAT_INITIAL_MSG,
+                    text: SLjs.Strings.CHAT_INITIAL_MSG.replace("%APPNAME%", SLjs.Strings.APP_NAME),
                     username: SLjs.Strings.APP_NAME,
                     icon_emoji: null,
                     isImportantMessage: true
@@ -242,7 +263,7 @@ var SLjs;
             else {
                 ShowingWorkHourMessage = true;
                 AddChatMessage({
-                    text: SLjs.Strings.CHAT_AFTER_HOURS_MSG,
+                    text: SLjs.Strings.CHAT_AFTER_HOURS_MSG.replace("%APPNAME%", SLjs.Strings.APP_NAME),
                     username: SLjs.Strings.APP_NAME,
                     icon_emoji: null,
                     isImportantMessage: true,
@@ -266,7 +287,7 @@ var SLjs;
             }
             if (message.username.length > 1) {
                 message.username = message.username.charAt(0).toUpperCase() + message.username.slice(1);
-                if (message.username.indexOf(" ") !== -1) {
+                if (message.username.indexOf(" ") !== -1 && message.username !== SLjs.Strings.APP_NAME) {
                     message.username = message.username.split(" ")[0];
                 }
             }
@@ -424,17 +445,17 @@ var SLjs;
         Strings.MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
         Strings.ATTACHMENT_COLOR = "#D00000";
         Strings.VISITOR_ICON = ":speech_balloon:";
-        Strings.WELCOME_MSG = "Welcome to " + Strings.APP_NAME + "!";
+        Strings.WELCOME_MSG = "Welcome to %APPNAME%!";
         Strings.NAME_REQUIRED = "During our conversation, what can we call you?";
         Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";
         Strings.NAME_INPUT_VALIDATION_ERROR = "Sorry, can you try entering your name in again?";
         Strings.NAME_INPUT_BUTTON = "Continue";
         Strings.CHAT_INPUT_PLACEHOLDER = "Enter your message here. Use SHIFT+ENTER to create a new line.";
-        Strings.CHAT_AFTER_HOURS_MSG = "Welcome to the support channel for " + Strings.APP_NAME + ". It is currently " +
+        Strings.CHAT_AFTER_HOURS_MSG = "Welcome to the support channel for %APPNAME%. It is currently " +
             "outside of standard support hours, so please leave a message and we " +
             "will get back to you during standard business hours.";
-        Strings.CHAT_INITIAL_MSG = "Welcome to the support channel for " + Strings.APP_NAME +
-            ". Please ask your question in this channel and someone will get back to you shortly.";
+        Strings.CHAT_INITIAL_MSG = "Welcome to the support channel for %APPNAME%. " +
+            "Please ask your question in this channel and someone will get back to you shortly.";
     })(Strings = SLjs.Strings || (SLjs.Strings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
@@ -449,7 +470,7 @@ var SLjs;
             SLjs.Interface.ConstructInterface(document.getElementById(SLjs.Config.element));
             if (SLjs.Config.visitorName === null || SLjs.Config.visitorName === undefined) {
                 SLjs.Interface.ConstructWelcomeWithName(function (visitorName) {
-                    SLjs.Config.visitorName = visitorName;
+                    SLjs.Config.visitorName = "[" + SLjs.VisitorId + "] " + visitorName + " (" + SLjs.Config.applicationName + ")";
                     SLjs.Interface.ConstructConversationWindow();
                     var socket = new SLjs.Socket();
                     socket.GetWebSocketData(function (webSocketUrl) {

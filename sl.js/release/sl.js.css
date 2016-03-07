@@ -84,6 +84,7 @@
 
 #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item.sljs-chat-item-error {
     position: absolute;
+    background-color: #ff2f00;
     background-color: rgba(255, 0, 0, 0.52);
     z-index: 9999;
     margin-top: 140px;
