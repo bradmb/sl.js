@@ -1,6 +1,10 @@
 ﻿module SLjs.Events {
     "use strict";
 
+    /**
+     * Handles any incoming message sent from the websocket connection and passes it on
+     * @param message
+     */
     export function OnMessageReceived(message: string) {
         var msgPreParse = JSON.parse(message);
 

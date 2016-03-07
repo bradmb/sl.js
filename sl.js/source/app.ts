@@ -12,11 +12,15 @@ module SLjs {
     "use strict";
 
     export var VisitorId: string;
-    export var Config: Models.ISLconfig = { applicationName: Strings.APP_NAME, channel: null, element: null, token: null };
+    export var Config: Models.ISLConfig = { applicationName: Strings.APP_NAME, channel: null, element: null, token: null };
     export var Users: Models.ISLSupportUser[] = <any>{};
 
     export class Application {
-        constructor(config: Models.ISLconfig) {
+        /**
+         * Initializes the application and displays the interface
+         * @param config
+         */
+        constructor(config: Models.ISLConfig) {
             Config = config;
             this.constructData();
 
@@ -24,7 +28,7 @@ module SLjs {
 
             if (Config.visitorName === null || Config.visitorName === undefined) {
                 Interface.ConstructWelcomeWithName(function (visitorName: string) {
-                    Config.visitorName = visitorName;
+                    Config.visitorName = "[" + VisitorId + "] " + visitorName + " (" + Config.applicationName + ")";
                     Interface.ConstructConversationWindow();
 
                     var socket = new Socket();

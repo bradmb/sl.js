@@ -6,9 +6,11 @@
     var ParentElement: HTMLElement;
     var ChatMessageBox: HTMLDivElement;
     var ChatMessageBoxItems: Models.ISLMessage[] = [];
+    var ShowingWorkHourMessage: boolean;
 
     /**
      * Builds the parent interface that all objects will be rendered into
+     * @param parentElement The pre-existing element we'll render all elements into
      */
     export function ConstructInterface(parentElement: HTMLElement) {
         // the wrapper that will dim the rest of the page
@@ -50,7 +52,7 @@
 
         // the welcome message
         var helloHeading = document.createElement("h2");
-        helloHeading.innerText = Strings.WELCOME_MSG;
+        helloHeading.innerText = Strings.WELCOME_MSG.replace("%APPNAME%", Strings.APP_NAME);
         ApplicationInterfaceBody.appendChild(helloHeading);
 
         // the message asking for their name
@@ -67,6 +69,25 @@
         var nameInput = document.createElement("input");
         nameInput.placeholder = Strings.NAME_INPUT_PLACEHOLDER;
         nameInputBox.appendChild(nameInput);
+
+        nameInputBox.onkeypress = function (key: KeyboardEvent) {
+            if (key.charCode === 13) {
+                if (nameInput.value.trim() === "") {
+                    nameHeading.className = "sljs-validation-failed";
+                    nameHeading.innerText = Strings.NAME_INPUT_VALIDATION_ERROR;
+
+                    nameInput.className = "validation-failed";
+                    nameInput.focus();
+                    return;
+                }
+
+                callback(nameInput.value);
+            }
+
+            return true;
+        };
+
+
         nameInput.focus();
 
         // the button that will submit the form and move on (or fail validation)
@@ -89,6 +110,9 @@
         nameInputBox.appendChild(nameInputBtn);
     }
 
+    /**
+     * Builds the conversation window that will be used to display messages
+     */
     export function ConstructConversationWindow() {
         ApplicationInterface.className = "sljs-chat";
         ApplicationInterfaceBody.innerHTML = "";
@@ -115,15 +139,33 @@
         };
 
         ApplicationInterfaceBody.appendChild(chatInputBox);
+        chatInputBox.focus();
 
-        AddChatMessage({
-            text: Strings.CHAT_INITIAL_MSG,
-            username: Strings.APP_NAME,
-            icon_emoji: null,
-            isImportantMessage: true
-        });
+        var workHours = new Hours.Validation();
+        if (workHours.IsDuringWorkHours()) {
+            ShowingWorkHourMessage = false;
+            AddChatMessage({
+                text: Strings.CHAT_INITIAL_MSG.replace("%APPNAME%", Strings.APP_NAME),
+                username: Strings.APP_NAME,
+                icon_emoji: null,
+                isImportantMessage: true
+            });
+        } else {
+            ShowingWorkHourMessage = true;
+            AddChatMessage({
+                text: Strings.CHAT_AFTER_HOURS_MSG.replace("%APPNAME%", Strings.APP_NAME),
+                username: Strings.APP_NAME,
+                icon_emoji: null,
+                isImportantMessage: true,
+                isErrorMessage: true
+            });
+        }
     }
 
+    /**
+     * Adds a new chat message into the conversation window
+     * @param message
+     */
     export function AddChatMessage(message: Models.ISLMessage) {
         var urlRegexMatch = Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
         while (urlRegexMatch != null) {
@@ -143,21 +185,25 @@
         if (message.username.length > 1) {
             message.username = message.username.charAt(0).toUpperCase() + message.username.slice(1);
 
-            if (message.username.indexOf(" ") !== -1) {
+            if (message.username.indexOf(" ") !== -1 && message.username !== Strings.APP_NAME) {
                 message.username = message.username.split(" ")[0];
             }
         }
 
         message.text = message.text.replace("\n", document.createElement("br").outerHTML);
 
-        ChatMessageBoxItems.push(message);
-        if (ChatMessageBoxItems.length > 10) {
+        if (message.username !== "You" && ShowingWorkHourMessage && !message.isImportantMessage) {
+            ShowingWorkHourMessage = false;
             ChatMessageBoxItems.shift();
         }
 
+        ChatMessageBoxItems.push(message);
         RenderChatMessages();
     }
 
+    /**
+     * Renders the messages into the conversation window. Function is called any time a new message is added.
+     */
     function RenderChatMessages() {
         ChatMessageBox.innerHTML = "";
 
@@ -167,6 +213,10 @@
 
             if (chatMsg.isImportantMessage !== undefined && chatMsg.isImportantMessage !== null) {
                 messageBox.className += " sljs-chat-item-important";
+            }
+
+            if (chatMsg.isErrorMessage !== undefined && chatMsg.isErrorMessage !== null) {
+                messageBox.className += " sljs-chat-item-error";
             }
 
             ChatMessageBox.appendChild(messageBox);

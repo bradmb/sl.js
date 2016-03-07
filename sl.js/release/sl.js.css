@@ -82,6 +82,23 @@
     border-bottom: dotted 1px rgba(74, 74, 74, 0.36);
 }
 
+#sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item.sljs-chat-item-error {
+    position: absolute;
+    background-color: #ff2f00;
+    background-color: rgba(255, 0, 0, 0.52);
+    z-index: 9999;
+    margin-top: 140px;
+    padding-left: 10px;
+    font-size: 14pt;
+    border-bottom: none;
+    color: #ffffff;
+    text-align: center;
+
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
 #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item a {
     color: #ff2f00;
     font-size: 10pt;

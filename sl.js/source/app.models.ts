@@ -11,7 +11,7 @@
 module SLjs.Models {
     "use strict";
 
-    export interface ISLconfig {
+    export interface ISLConfig {
         token: string;
         channel: string;
         visitorName?: string;
@@ -19,10 +19,26 @@ module SLjs.Models {
         element: string;
         applicationName?: string;
         supportGroupName?: string;
+        workDates?: ISLConfigWorkHours;
+    }
+
+    export interface ISLConfigWorkHours {
+        sunday: boolean;
+        monday: boolean;
+        tuesday: boolean;
+        wednesday: boolean;
+        thursday: boolean;
+        friday: boolean;
+        saturday: boolean;
+        startHourUtc: number;
+        startMinutes: number;
+        stopHourUtc: number;
+        stopMinutes: number;
     }
 
     export interface ISLMessage {
         isImportantMessage?: boolean;
+        isErrorMessage?: boolean;
         text: string;
         username: string;
         icon_emoji: string;
