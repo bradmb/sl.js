@@ -12,8 +12,14 @@ module SLjs {
     "use strict";
 
     export var VisitorId: string;
-    export var Config: Models.ISLConfig = { applicationName: Strings.APP_NAME, channel: null, element: null, token: null };
     export var Users: Models.ISLSupportUser[] = <any>{};
+    export var Config: Models.ISLConfig = {
+        applicationName: Strings.APP_NAME,
+        channel: null,
+        element: null,
+        token: null,
+        position: "float"
+    };
 
     export class Application {
         /**
@@ -21,7 +27,7 @@ module SLjs {
          * @param config
          */
         constructor(config: Models.ISLConfig) {
-            Config = config;
+            this.mapConfigParameters(config);
             this.constructData();
 
             Interface.ConstructInterface(document.getElementById(Config.element));
@@ -80,6 +86,18 @@ module SLjs {
             var uniqueId = currentDate.getMilliseconds() + "" + Math.floor((Math.random() * 10) + 1);
 
             return uniqueId;
+        }
+
+        /**
+         * Maps the configuration parameters to the pre-existing config data
+         * @param config
+         */
+        mapConfigParameters(config: Models.ISLConfig) {
+            for (var param in config) {
+                if (config.hasOwnProperty(param) && config[param] !== undefined) {
+                    Config[param] = config[param];
+                }
+            }
         }
     }
 }

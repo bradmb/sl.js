@@ -16,6 +16,11 @@
         // the wrapper that will dim the rest of the page
         var wrapper = document.createElement("div");
         wrapper.id = Parameters.INTERFACE_WRAPPER_DIV_ID;
+        wrapper.className = "sljs-pos-" + Config.position;
+
+        if (Config.position !== "float") {
+            wrapper.className += " sljs-pos-side";
+        }
 
         // the pre-existing div on the page we"re going to use
         ParentElement = parentElement;

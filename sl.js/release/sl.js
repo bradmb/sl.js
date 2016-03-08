@@ -166,6 +166,10 @@ var SLjs;
         function ConstructInterface(parentElement) {
             var wrapper = document.createElement("div");
             wrapper.id = SLjs.Parameters.INTERFACE_WRAPPER_DIV_ID;
+            wrapper.className = "sljs-pos-" + SLjs.Config.position;
+            if (SLjs.Config.position !== "float") {
+                wrapper.className += " sljs-pos-side";
+            }
             ParentElement = parentElement;
             ParentElement.appendChild(wrapper);
             ApplicationInterface = document.createElement("div");
@@ -461,11 +465,17 @@ var SLjs;
 var SLjs;
 (function (SLjs) {
     "use strict";
-    SLjs.Config = { applicationName: SLjs.Strings.APP_NAME, channel: null, element: null, token: null };
     SLjs.Users = {};
+    SLjs.Config = {
+        applicationName: SLjs.Strings.APP_NAME,
+        channel: null,
+        element: null,
+        token: null,
+        position: "float"
+    };
     var Application = (function () {
         function Application(config) {
-            SLjs.Config = config;
+            this.mapConfigParameters(config);
             this.constructData();
             SLjs.Interface.ConstructInterface(document.getElementById(SLjs.Config.element));
             if (SLjs.Config.visitorName === null || SLjs.Config.visitorName === undefined) {
@@ -506,6 +516,13 @@ var SLjs;
             var currentDate = new Date();
             var uniqueId = currentDate.getMilliseconds() + "" + Math.floor((Math.random() * 10) + 1);
             return uniqueId;
+        };
+        Application.prototype.mapConfigParameters = function (config) {
+            for (var param in config) {
+                if (config.hasOwnProperty(param) && config[param] !== undefined) {
+                    SLjs.Config[param] = config[param];
+                }
+            }
         };
         return Application;
     })();

@@ -1,4 +1,4 @@
-﻿#sljs-wrapper {
+﻿#sljs-wrapper.sljs-pos-float {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -13,9 +13,12 @@
     background-color: rgba(74, 74, 74, 0.36);
 }
 
-#sljs-interface {
+#sljs-wrapper #sljs-interface {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f6f6f6;
+}
+
+#sljs-wrapper.sljs-pos-float #sljs-interface {
     position: fixed;
 
     top: 0;
@@ -32,13 +35,35 @@
     border-radius: 10px;
 }
 
-#sljs-interface .sljs-close-button {
+#sljs-wrapper.sljs-pos-left #sljs-interface {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    margin: auto;
+
+    border-right: 2px solid #d9d9d9;
+    border-right: 2px solid rgba(74, 74, 74, 0.36);
+}
+
+#sljs-wrapper.sljs-pos-right #sljs-interface {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    margin: auto;
+
+    border-left: 2px solid #d9d9d9;
+    border-left: 2px solid rgba(74, 74, 74, 0.36);
+}
+
+#sljs-wrapper #sljs-interface .sljs-close-button {
     position: absolute;
     right: 20px;
     top: 10px;
 }
 
-#sljs-interface .sljs-close-button button {
+#sljs-wrapper #sljs-interface .sljs-close-button button {
     cursor: pointer;
 
     font-weight: bold;
@@ -53,18 +78,64 @@
     border-radius: 4px;
 }
 
-#sljs-interface.sljs-chat {
+#sljs-wrapper.sljs-pos-float #sljs-interface.sljs-chat {
     width: 600px;
     height: 450px;
 }
 
-#sljs-interface.sljs-chat h2 {
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-chat {
+    width: 300px;
+    height: 100%;
+}
+
+
+#sljs-wrapper #sljs-interface.sljs-chat h2 {
     text-align: center;
 }
 
-#sljs-interface.sljs-chat .sljs-chat-messages {
+#sljs-wrapper.sljs-pos-float #sljs-interface.sljs-chat .sljs-chat-messages {
     height: 350px;
     overflow: auto;
+}
+
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-chat .sljs-chat-messages {
+    width: 300px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 95px;
+    overflow: auto;
+}
+
+#sljs-wrapper #sljs-interface.sljs-chat .sljs-chat-message-input {
+    font-size: 12pt;
+    color: #484848;
+
+    margin: 3px 0 0 5px;
+    height: 65px;
+
+    resize: none;
+
+    border: 2px solid #ffffff;
+    background-color: #ffffff;
+
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+#sljs-wrapper.sljs-pos-float #sljs-interface.sljs-chat .sljs-chat-message-input {
+    padding: 10px;
+    width: 565px;
+}
+
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-chat .sljs-chat-message-input {
+    position: absolute;
+    bottom: 5px;
+
+    padding: 10px;
+
+    width: 265px;
 }
 
 #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item {
@@ -76,27 +147,46 @@
 }
 
 #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item.sljs-chat-item-important {
-    padding-left: 10px;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+
     font-weight: lighter;
     border-bottom: dotted 1px #bbbbbb;
     border-bottom: dotted 1px rgba(74, 74, 74, 0.36);
 }
 
-#sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item.sljs-chat-item-error {
+#sljs-wrapper.sljs-pos-float #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item.sljs-chat-item-error {
     position: absolute;
+    margin-top: 140px;
+    padding-left: 10px;
+    text-align: center;
+}
+
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item.sljs-chat-item-error .sljs-chat-item-body {
+    width: 245px;
+    text-align: center;
+    font-size: 12pt;
+}
+
+#sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item.sljs-chat-item-error {
     background-color: #ff2f00;
     background-color: rgba(255, 0, 0, 0.52);
     z-index: 9999;
-    margin-top: 140px;
-    padding-left: 10px;
     font-size: 14pt;
     border-bottom: none;
     color: #ffffff;
-    text-align: center;
 
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
+}
+
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item .sljs-chat-item-support {
+    width: 260px;
+}
+
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item .sljs-chat-item-body {
+    width: 260px;
 }
 
 #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item a {
@@ -126,26 +216,6 @@
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
-}
-
-#sljs-interface.sljs-chat .sljs-chat-message-input {
-    font-size: 12pt;
-    color: #484848;
-
-    padding: 10px;
-    margin: 3px 0 0 5px;
-
-    width: 565px;
-    height: 65px;
-
-    resize: none;
-
-    border: 2px solid #ffffff;
-    background-color: #ffffff;
-
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
 }
 
 #sljs-interface.sljs-welcome {
