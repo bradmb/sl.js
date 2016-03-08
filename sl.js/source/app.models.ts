@@ -1,12 +1,16 @@
 ﻿/**
   * The initialization config for SL.js
-  * @param webhookUrl The location of where to send commands to in Slack
-  * @param element The span or div on your page where we should render the script
+  * @param token Your Slack API token
+  * @param channel The channel that this script will run inside
   * @param visitorName The name of the user who is using this interface. Will prompt for a name if left null/undefined
   * @param visitorIcon The icon to use for displaying next to the user's message. Will default to a predefined image if left null/undefined
+  * @param element The span or div on your page where we should render the script
   * @param applicatioName The name that appears next to the user's name in the channel,
   *                       used for clearly identifying where this user is coming from
   * @param supportGroupName The title displayed next to the users who are responding from Slack
+  * @param workDates The start and stop date/times that you are generally available for support. Won't prevent
+  *                  messages from coming in, but will display an after-hours notice
+  * @param position Where the application is displayed (left, right, float)
   */
 module SLjs.Models {
     "use strict";
@@ -20,6 +24,7 @@ module SLjs.Models {
         applicationName?: string;
         supportGroupName?: string;
         workDates?: ISLConfigWorkHours;
+        position?: string;
     }
 
     export interface ISLConfigWorkHours {
