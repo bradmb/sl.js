@@ -166,6 +166,10 @@ var SLjs;
         function ConstructInterface(parentElement) {
             var wrapper = document.createElement("div");
             wrapper.id = SLjs.Parameters.INTERFACE_WRAPPER_DIV_ID;
+            wrapper.className = "sljs-pos-" + SLjs.Config.position;
+            if (SLjs.Config.position !== "float") {
+                wrapper.className += " sljs-pos-side";
+            }
             ParentElement = parentElement;
             ParentElement.appendChild(wrapper);
             ApplicationInterface = document.createElement("div");
@@ -181,13 +185,14 @@ var SLjs;
             };
             closeButtonBox.appendChild(closeButton);
             ApplicationInterfaceBody = document.createElement("div");
+            ApplicationInterfaceBody.className = "sljs-app-wrapper";
             ApplicationInterface.appendChild(ApplicationInterfaceBody);
         }
         Interface.ConstructInterface = ConstructInterface;
         function ConstructWelcomeWithName(callback) {
             ApplicationInterface.className = "sljs-welcome";
             var helloHeading = document.createElement("h2");
-            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace("%APPNAME%", SLjs.Strings.APP_NAME);
+            helloHeading.innerHTML = SLjs.Strings.WELCOME_MSG.replace("%APPNAME%", SLjs.Strings.APP_NAME);
             ApplicationInterfaceBody.appendChild(helloHeading);
             var nameHeading = document.createElement("h3");
             nameHeading.innerText = SLjs.Strings.NAME_REQUIRED;
@@ -393,48 +398,6 @@ var SLjs;
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
-    "use strict";
-    var Socket = (function () {
-        function Socket() {
-        }
-        Socket.prototype.GetWebSocketData = function (callback) {
-            var packet = {
-                mpim_aware: false,
-                no_unreads: true,
-                simple_latest: true,
-                token: SLjs.Config.token
-            };
-            SLjs.Http.Action(packet, SLjs.Endpoints.WebSocketStart, function (response) {
-                var responsePacket = JSON.parse(response);
-                for (var _i = 0, _a = responsePacket.users; _i < _a.length; _i++) {
-                    var user = _a[_i];
-                    SLjs.Users[user.id] = {
-                        name: user.real_name !== "" ? user.real_name : user.name,
-                        presence: user.presence,
-                        image: user.profile.image_72
-                    };
-                }
-                callback(responsePacket.url);
-            });
-        };
-        Socket.prototype.ConnectWebSocket = function (url) {
-            var connection = new WebSocket(url);
-            connection.onopen = function (event) {
-            };
-            connection.onmessage = function (message) {
-                SLjs.Events.OnMessageReceived(message.data);
-            };
-            connection.onerror = function (event) {
-            };
-            connection.onclose = function (event) {
-            };
-        };
-        return Socket;
-    })();
-    SLjs.Socket = Socket;
-})(SLjs || (SLjs = {}));
-var SLjs;
-(function (SLjs) {
     var Strings;
     (function (Strings) {
         "use strict";
@@ -445,7 +408,7 @@ var SLjs;
         Strings.MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
         Strings.ATTACHMENT_COLOR = "#D00000";
         Strings.VISITOR_ICON = ":speech_balloon:";
-        Strings.WELCOME_MSG = "Welcome to %APPNAME%!";
+        Strings.WELCOME_MSG = "Welcome to the support channel for<br/>%APPNAME%!";
         Strings.NAME_REQUIRED = "During our conversation, what can we call you?";
         Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";
         Strings.NAME_INPUT_VALIDATION_ERROR = "Sorry, can you try entering your name in again?";
@@ -461,11 +424,17 @@ var SLjs;
 var SLjs;
 (function (SLjs) {
     "use strict";
-    SLjs.Config = { applicationName: SLjs.Strings.APP_NAME, channel: null, element: null, token: null };
     SLjs.Users = {};
+    SLjs.Config = {
+        applicationName: SLjs.Strings.APP_NAME,
+        channel: null,
+        element: null,
+        token: null,
+        position: "float"
+    };
     var Application = (function () {
         function Application(config) {
-            SLjs.Config = config;
+            this.mapConfigParameters(config);
             this.constructData();
             SLjs.Interface.ConstructInterface(document.getElementById(SLjs.Config.element));
             if (SLjs.Config.visitorName === null || SLjs.Config.visitorName === undefined) {
@@ -507,8 +476,57 @@ var SLjs;
             var uniqueId = currentDate.getMilliseconds() + "" + Math.floor((Math.random() * 10) + 1);
             return uniqueId;
         };
+        Application.prototype.mapConfigParameters = function (config) {
+            for (var param in config) {
+                if (config.hasOwnProperty(param) && config[param] !== undefined) {
+                    SLjs.Config[param] = config[param];
+                }
+            }
+        };
         return Application;
     })();
     SLjs.Application = Application;
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    "use strict";
+    var Socket = (function () {
+        function Socket() {
+        }
+        Socket.prototype.GetWebSocketData = function (callback) {
+            var packet = {
+                mpim_aware: false,
+                no_unreads: true,
+                simple_latest: true,
+                token: SLjs.Config.token
+            };
+            SLjs.Http.Action(packet, SLjs.Endpoints.WebSocketStart, function (response) {
+                var responsePacket = JSON.parse(response);
+                for (var _i = 0, _a = responsePacket.users; _i < _a.length; _i++) {
+                    var user = _a[_i];
+                    SLjs.Users[user.id] = {
+                        name: user.real_name !== "" ? user.real_name : user.name,
+                        presence: user.presence,
+                        image: user.profile.image_72
+                    };
+                }
+                callback(responsePacket.url);
+            });
+        };
+        Socket.prototype.ConnectWebSocket = function (url) {
+            var connection = new WebSocket(url);
+            connection.onopen = function (event) {
+            };
+            connection.onmessage = function (message) {
+                SLjs.Events.OnMessageReceived(message.data);
+            };
+            connection.onerror = function (event) {
+            };
+            connection.onclose = function (event) {
+            };
+        };
+        return Socket;
+    })();
+    SLjs.Socket = Socket;
 })(SLjs || (SLjs = {}));
 //# sourceMappingURL=sl.js.map

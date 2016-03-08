@@ -16,6 +16,11 @@
         // the wrapper that will dim the rest of the page
         var wrapper = document.createElement("div");
         wrapper.id = Parameters.INTERFACE_WRAPPER_DIV_ID;
+        wrapper.className = "sljs-pos-" + Config.position;
+
+        if (Config.position !== "float") {
+            wrapper.className += " sljs-pos-side";
+        }
 
         // the pre-existing div on the page we"re going to use
         ParentElement = parentElement;
@@ -40,6 +45,7 @@
         closeButtonBox.appendChild(closeButton);
 
         ApplicationInterfaceBody = document.createElement("div");
+        ApplicationInterfaceBody.className = "sljs-app-wrapper";
         ApplicationInterface.appendChild(ApplicationInterfaceBody);
     }
 
@@ -52,7 +58,7 @@
 
         // the welcome message
         var helloHeading = document.createElement("h2");
-        helloHeading.innerText = Strings.WELCOME_MSG.replace("%APPNAME%", Strings.APP_NAME);
+        helloHeading.innerHTML = Strings.WELCOME_MSG.replace("%APPNAME%", Strings.APP_NAME);
         ApplicationInterfaceBody.appendChild(helloHeading);
 
         // the message asking for their name

@@ -15,7 +15,7 @@
     export var VISITOR_ICON = ":speech_balloon:";
 
     // strings for the welcome message asking for their name
-    export var WELCOME_MSG: string = "Welcome to %APPNAME%!";
+    export var WELCOME_MSG: string = "Welcome to the support channel for<br/>%APPNAME%!";
     export var NAME_REQUIRED: string = "During our conversation, what can we call you?";
     export var NAME_INPUT_PLACEHOLDER: string = "Enter your name in here";
     export var NAME_INPUT_VALIDATION_ERROR: string = "Sorry, can you try entering your name in again?";
