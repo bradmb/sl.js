@@ -7,12 +7,23 @@ This script was designed based on a need I had to provide a simple Slack support
 
 ----------
 
+## Requirements ##
+1. The .css and .js files from this script included in your page
+2. [A Slack API Token](https://api.slack.com/tokens)
+3. [The Slack Channel ID](https://api.slack.com/methods/channels.list/test) for the channel that you want to run this script in
+
+----------
+
 ## How to setup ##
 Download a copy of the [latest release from the releases page](https://github.com/bradmb/sl.js/releases) and reference them in your code.
 
-You'll also need to grab your Slack token (or generate a new one) and locate the channel id for the Slack channel you want this script to run in.
+If you're using Visual Studio, simply grab the file off NuGet to ensure you have access to the latest package at all times:
 
-Running the script will fully display the interface, but a button binding will be coming soon. Until then, you will need to setup your own binding on a button to initialize the code.
+```PowerShell
+PM> Install-Package sl.js -Pre
+```
+
+Today, running the script will fully display the interface, but a button binding will be coming soon (see: to do list). Until then, you will need to setup your own binding on a button to initialize the code.
 
 To bring up the interface, simply call this:
 ```javascript
