@@ -185,13 +185,14 @@ var SLjs;
             };
             closeButtonBox.appendChild(closeButton);
             ApplicationInterfaceBody = document.createElement("div");
+            ApplicationInterfaceBody.className = "sljs-app-wrapper";
             ApplicationInterface.appendChild(ApplicationInterfaceBody);
         }
         Interface.ConstructInterface = ConstructInterface;
         function ConstructWelcomeWithName(callback) {
             ApplicationInterface.className = "sljs-welcome";
             var helloHeading = document.createElement("h2");
-            helloHeading.innerText = SLjs.Strings.WELCOME_MSG.replace("%APPNAME%", SLjs.Strings.APP_NAME);
+            helloHeading.innerHTML = SLjs.Strings.WELCOME_MSG.replace("%APPNAME%", SLjs.Strings.APP_NAME);
             ApplicationInterfaceBody.appendChild(helloHeading);
             var nameHeading = document.createElement("h3");
             nameHeading.innerText = SLjs.Strings.NAME_REQUIRED;
@@ -397,48 +398,6 @@ var SLjs;
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
-    "use strict";
-    var Socket = (function () {
-        function Socket() {
-        }
-        Socket.prototype.GetWebSocketData = function (callback) {
-            var packet = {
-                mpim_aware: false,
-                no_unreads: true,
-                simple_latest: true,
-                token: SLjs.Config.token
-            };
-            SLjs.Http.Action(packet, SLjs.Endpoints.WebSocketStart, function (response) {
-                var responsePacket = JSON.parse(response);
-                for (var _i = 0, _a = responsePacket.users; _i < _a.length; _i++) {
-                    var user = _a[_i];
-                    SLjs.Users[user.id] = {
-                        name: user.real_name !== "" ? user.real_name : user.name,
-                        presence: user.presence,
-                        image: user.profile.image_72
-                    };
-                }
-                callback(responsePacket.url);
-            });
-        };
-        Socket.prototype.ConnectWebSocket = function (url) {
-            var connection = new WebSocket(url);
-            connection.onopen = function (event) {
-            };
-            connection.onmessage = function (message) {
-                SLjs.Events.OnMessageReceived(message.data);
-            };
-            connection.onerror = function (event) {
-            };
-            connection.onclose = function (event) {
-            };
-        };
-        return Socket;
-    })();
-    SLjs.Socket = Socket;
-})(SLjs || (SLjs = {}));
-var SLjs;
-(function (SLjs) {
     var Strings;
     (function (Strings) {
         "use strict";
@@ -449,7 +408,7 @@ var SLjs;
         Strings.MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
         Strings.ATTACHMENT_COLOR = "#D00000";
         Strings.VISITOR_ICON = ":speech_balloon:";
-        Strings.WELCOME_MSG = "Welcome to %APPNAME%!";
+        Strings.WELCOME_MSG = "Welcome to the support channel for<br/>%APPNAME%!";
         Strings.NAME_REQUIRED = "During our conversation, what can we call you?";
         Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";
         Strings.NAME_INPUT_VALIDATION_ERROR = "Sorry, can you try entering your name in again?";
@@ -527,5 +486,47 @@ var SLjs;
         return Application;
     })();
     SLjs.Application = Application;
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    "use strict";
+    var Socket = (function () {
+        function Socket() {
+        }
+        Socket.prototype.GetWebSocketData = function (callback) {
+            var packet = {
+                mpim_aware: false,
+                no_unreads: true,
+                simple_latest: true,
+                token: SLjs.Config.token
+            };
+            SLjs.Http.Action(packet, SLjs.Endpoints.WebSocketStart, function (response) {
+                var responsePacket = JSON.parse(response);
+                for (var _i = 0, _a = responsePacket.users; _i < _a.length; _i++) {
+                    var user = _a[_i];
+                    SLjs.Users[user.id] = {
+                        name: user.real_name !== "" ? user.real_name : user.name,
+                        presence: user.presence,
+                        image: user.profile.image_72
+                    };
+                }
+                callback(responsePacket.url);
+            });
+        };
+        Socket.prototype.ConnectWebSocket = function (url) {
+            var connection = new WebSocket(url);
+            connection.onopen = function (event) {
+            };
+            connection.onmessage = function (message) {
+                SLjs.Events.OnMessageReceived(message.data);
+            };
+            connection.onerror = function (event) {
+            };
+            connection.onclose = function (event) {
+            };
+        };
+        return Socket;
+    })();
+    SLjs.Socket = Socket;
 })(SLjs || (SLjs = {}));
 //# sourceMappingURL=sl.js.map

@@ -146,8 +146,8 @@
 }
 
 #sljs-wrapper #sljs-interface.sljs-chat .sljs-chat-messages .sljs-chat-item.sljs-chat-item-important {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
+    padding-left: 10px;
+    padding-right: 10px;
 
     font-weight: lighter;
     border-bottom: dotted 1px #bbbbbb;
@@ -226,7 +226,7 @@
 
 #sljs-wrapper.sljs-pos-float #sljs-interface.sljs-welcome {
     width: 600px;
-    height: 250px;
+    height: 280px;
 }
 
 #sljs-wrapper.sljs-pos-side #sljs-interface.sljs-welcome {
@@ -234,14 +234,28 @@
     height: 100%;
 }
 
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-welcome .sljs-app-wrapper {
+    position: absolute;
+    bottom: 10px;
+}
+
 #sljs-wrapper #sljs-interface.sljs-welcome h2 {
     text-align: center;
+}
 
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-welcome h2 {
+    font-size: 22pt;
+    margin-top: 50px;
+    padding: 0 5px;
 }
 
 #sljs-wrapper #sljs-interface.sljs-welcome h3 {
     text-align: center;
     font-style: italic;
+}
+
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-welcome h3 {
+    font-size: 16pt;
 }
 
 #sljs-wrapper #sljs-interface.sljs-welcome h3.sljs-validation-failed {
@@ -258,14 +272,22 @@
     padding: 10px;
     margin-bottom: 10px;
 
-    width: 500px;
-
     border: 2px solid #ffffff;
     background-color: #ffffff;
 
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
+}
+
+#sljs-wrapper.sljs-pos-float #sljs-interface.sljs-welcome .sljs-welcome-input input {
+    font-size: 20pt;
+    width: 500px;
+}
+
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-welcome .sljs-welcome-input input {
+    font-size: 14pt;
+    width: 250px;
 }
 
 #sljs-wrapper #sljs-interface.sljs-welcome .sljs-welcome-input input.sljs-validation-failed {
@@ -275,11 +297,9 @@
 #sljs-wrapper #sljs-interface.sljs-welcome .sljs-welcome-input button {
     cursor: pointer;
 
-    font-size: 15pt;
     font-weight: bold;
 
     padding: 10px;
-    width: 520px;
 
     color: #ffffff;
     background-color: #ad0000;
@@ -288,4 +308,14 @@
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
+}
+
+#sljs-wrapper.sljs-pos-float #sljs-interface.sljs-welcome .sljs-welcome-input button {
+    font-size: 15pt;
+    width: 520px;
+}
+
+#sljs-wrapper.sljs-pos-side #sljs-interface.sljs-welcome .sljs-welcome-input button {
+    font-size: 12pt;
+    width: 270px;
 }

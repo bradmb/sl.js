@@ -45,6 +45,7 @@
         closeButtonBox.appendChild(closeButton);
 
         ApplicationInterfaceBody = document.createElement("div");
+        ApplicationInterfaceBody.className = "sljs-app-wrapper";
         ApplicationInterface.appendChild(ApplicationInterfaceBody);
     }
 
@@ -57,7 +58,7 @@
 
         // the welcome message
         var helloHeading = document.createElement("h2");
-        helloHeading.innerText = Strings.WELCOME_MSG.replace("%APPNAME%", Strings.APP_NAME);
+        helloHeading.innerHTML = Strings.WELCOME_MSG.replace("%APPNAME%", Strings.APP_NAME);
         ApplicationInterfaceBody.appendChild(helloHeading);
 
         // the message asking for their name
