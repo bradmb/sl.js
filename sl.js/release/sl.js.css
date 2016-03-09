@@ -16,6 +16,8 @@
 #sljs-wrapper #sljs-interface {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f6f6f6;
+
+    z-index: 9990;
 }
 
 #sljs-wrapper.sljs-pos-float #sljs-interface {
@@ -61,6 +63,8 @@
     position: absolute;
     right: 20px;
     top: 10px;
+
+    z-index: 9991;
 }
 
 #sljs-wrapper #sljs-interface .sljs-close-button button {

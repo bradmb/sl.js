@@ -3,7 +3,7 @@
 
     var ApplicationInterface: HTMLDivElement;
     var ApplicationInterfaceBody: HTMLDivElement;
-    var ParentElement: HTMLElement;
+    var ParentElement: HTMLElement = null;
     var ChatMessageBox: HTMLDivElement;
     var ChatMessageBoxItems: Models.ISLMessage[] = [];
     var ShowingWorkHourMessage: boolean;
@@ -13,6 +13,10 @@
      * @param parentElement The pre-existing element we'll render all elements into
      */
     export function ConstructInterface(parentElement: HTMLElement) {
+        if (ParentElement != null) {
+            Dispose();
+        }
+
         // the wrapper that will dim the rest of the page
         var wrapper = document.createElement("div");
         wrapper.id = Parameters.INTERFACE_WRAPPER_DIV_ID;
@@ -40,13 +44,31 @@
         var closeButton = document.createElement("button");
         closeButton.innerText = "x";
         closeButton.onclick = function () {
-            ParentElement.innerHTML = "";
+            Dispose();
         };
         closeButtonBox.appendChild(closeButton);
 
         ApplicationInterfaceBody = document.createElement("div");
         ApplicationInterfaceBody.className = "sljs-app-wrapper";
         ApplicationInterface.appendChild(ApplicationInterfaceBody);
+    }
+
+    /**
+     * Removes all event handling/websockets to ensure new calls to the code will not result in duplicate events
+     */
+    function Dispose() {
+        ChatMessageBoxItems = [];
+        ChatMessageBox.remove();
+        ApplicationInterfaceBody.remove();
+        ApplicationInterface.remove();
+
+        ParentElement.innerHTML = "";
+        ParentElement.cloneNode(true);
+        ParentElement = null;
+
+        Config.visitorName = null;
+
+        AppWebSocket.CloseWebSocket();
     }
 
     /**
