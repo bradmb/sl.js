@@ -159,11 +159,14 @@ var SLjs;
         "use strict";
         var ApplicationInterface;
         var ApplicationInterfaceBody;
-        var ParentElement;
+        var ParentElement = null;
         var ChatMessageBox;
         var ChatMessageBoxItems = [];
         var ShowingWorkHourMessage;
         function ConstructInterface(parentElement) {
+            if (ParentElement != null) {
+                Dispose();
+            }
             var wrapper = document.createElement("div");
             wrapper.id = SLjs.Parameters.INTERFACE_WRAPPER_DIV_ID;
             wrapper.className = "sljs-pos-" + SLjs.Config.position;
@@ -181,7 +184,7 @@ var SLjs;
             var closeButton = document.createElement("button");
             closeButton.innerText = "x";
             closeButton.onclick = function () {
-                ParentElement.innerHTML = "";
+                Dispose();
             };
             closeButtonBox.appendChild(closeButton);
             ApplicationInterfaceBody = document.createElement("div");
@@ -189,6 +192,17 @@ var SLjs;
             ApplicationInterface.appendChild(ApplicationInterfaceBody);
         }
         Interface.ConstructInterface = ConstructInterface;
+        function Dispose() {
+            ChatMessageBoxItems = [];
+            ChatMessageBox.remove();
+            ApplicationInterfaceBody.remove();
+            ApplicationInterface.remove();
+            ParentElement.innerHTML = "";
+            ParentElement.cloneNode(true);
+            ParentElement = null;
+            SLjs.Config.visitorName = null;
+            SLjs.AppWebSocket.CloseWebSocket();
+        }
         function ConstructWelcomeWithName(callback) {
             ApplicationInterface.className = "sljs-welcome";
             var helloHeading = document.createElement("h2");
@@ -398,6 +412,55 @@ var SLjs;
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
+    "use strict";
+    SLjs.InterfaceWebSocket = null;
+    var Socket = (function () {
+        function Socket() {
+        }
+        Socket.prototype.GetWebSocketData = function (callback) {
+            var packet = {
+                mpim_aware: false,
+                no_unreads: true,
+                simple_latest: true,
+                token: SLjs.Config.token
+            };
+            SLjs.Http.Action(packet, SLjs.Endpoints.WebSocketStart, function (response) {
+                var responsePacket = JSON.parse(response);
+                for (var _i = 0, _a = responsePacket.users; _i < _a.length; _i++) {
+                    var user = _a[_i];
+                    SLjs.Users[user.id] = {
+                        name: user.real_name !== "" ? user.real_name : user.name,
+                        presence: user.presence,
+                        image: user.profile.image_72
+                    };
+                }
+                callback(responsePacket.url);
+            });
+        };
+        Socket.prototype.ConnectWebSocket = function (url) {
+            SLjs.InterfaceWebSocket = new WebSocket(url);
+            SLjs.InterfaceWebSocket.onopen = function (event) {
+            };
+            SLjs.InterfaceWebSocket.onmessage = function (message) {
+                SLjs.Events.OnMessageReceived(message.data);
+            };
+            SLjs.InterfaceWebSocket.onerror = function (event) {
+            };
+            SLjs.InterfaceWebSocket.onclose = function (event) {
+            };
+        };
+        Socket.prototype.CloseWebSocket = function () {
+            if (SLjs.InterfaceWebSocket !== null) {
+                SLjs.InterfaceWebSocket.close();
+                SLjs.InterfaceWebSocket = null;
+            }
+        };
+        return Socket;
+    })();
+    SLjs.Socket = Socket;
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
     var Strings;
     (function (Strings) {
         "use strict";
@@ -441,18 +504,18 @@ var SLjs;
                 SLjs.Interface.ConstructWelcomeWithName(function (visitorName) {
                     SLjs.Config.visitorName = "[" + SLjs.VisitorId + "] " + visitorName + " (" + SLjs.Config.applicationName + ")";
                     SLjs.Interface.ConstructConversationWindow();
-                    var socket = new SLjs.Socket();
-                    socket.GetWebSocketData(function (webSocketUrl) {
-                        socket.ConnectWebSocket(webSocketUrl);
+                    SLjs.AppWebSocket = new SLjs.Socket();
+                    SLjs.AppWebSocket.GetWebSocketData(function (webSocketUrl) {
+                        SLjs.AppWebSocket.ConnectWebSocket(webSocketUrl);
                     });
                 });
             }
             else {
                 SLjs.Config.visitorName = "[" + SLjs.VisitorId + "] " + SLjs.Config.visitorName + " (" + SLjs.Config.applicationName + ")";
                 SLjs.Interface.ConstructConversationWindow();
-                var socket = new SLjs.Socket();
-                socket.GetWebSocketData(function (webSocketUrl) {
-                    socket.ConnectWebSocket(webSocketUrl);
+                SLjs.AppWebSocket = new SLjs.Socket();
+                SLjs.AppWebSocket.GetWebSocketData(function (webSocketUrl) {
+                    SLjs.AppWebSocket.ConnectWebSocket(webSocketUrl);
                 });
             }
         }
@@ -486,47 +549,5 @@ var SLjs;
         return Application;
     })();
     SLjs.Application = Application;
-})(SLjs || (SLjs = {}));
-var SLjs;
-(function (SLjs) {
-    "use strict";
-    var Socket = (function () {
-        function Socket() {
-        }
-        Socket.prototype.GetWebSocketData = function (callback) {
-            var packet = {
-                mpim_aware: false,
-                no_unreads: true,
-                simple_latest: true,
-                token: SLjs.Config.token
-            };
-            SLjs.Http.Action(packet, SLjs.Endpoints.WebSocketStart, function (response) {
-                var responsePacket = JSON.parse(response);
-                for (var _i = 0, _a = responsePacket.users; _i < _a.length; _i++) {
-                    var user = _a[_i];
-                    SLjs.Users[user.id] = {
-                        name: user.real_name !== "" ? user.real_name : user.name,
-                        presence: user.presence,
-                        image: user.profile.image_72
-                    };
-                }
-                callback(responsePacket.url);
-            });
-        };
-        Socket.prototype.ConnectWebSocket = function (url) {
-            var connection = new WebSocket(url);
-            connection.onopen = function (event) {
-            };
-            connection.onmessage = function (message) {
-                SLjs.Events.OnMessageReceived(message.data);
-            };
-            connection.onerror = function (event) {
-            };
-            connection.onclose = function (event) {
-            };
-        };
-        return Socket;
-    })();
-    SLjs.Socket = Socket;
 })(SLjs || (SLjs = {}));
 //# sourceMappingURL=sl.js.map

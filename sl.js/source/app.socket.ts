@@ -1,5 +1,6 @@
 ﻿module SLjs {
     "use strict";
+    export var InterfaceWebSocket: WebSocket = null;
 
     export class Socket {
         /**
@@ -30,26 +31,33 @@
         }
 
         ConnectWebSocket(url: string) {
-            var connection = new WebSocket(url);
+            InterfaceWebSocket = new WebSocket(url);
 
-            connection.onopen = function (event: Event) {
+            InterfaceWebSocket.onopen = function (event: Event) {
                 // console.log("ws:connection opened");
                 // console.log(event);
             };
 
-            connection.onmessage = function (message: MessageEvent) {
+            InterfaceWebSocket.onmessage = function (message: MessageEvent) {
                 Events.OnMessageReceived(message.data);
             };
 
-            connection.onerror = function (event: Event) {
+            InterfaceWebSocket.onerror = function (event: Event) {
                 // console.log("ws:connection error");
                 // console.log(event);
             };
 
-            connection.onclose = function (event: CloseEvent) {
+            InterfaceWebSocket.onclose = function (event: CloseEvent) {
                 // console.log("ws:connection closed");
                 // console.log(event);
             };
+        }
+
+        CloseWebSocket() {
+            if (InterfaceWebSocket !== null) {
+                InterfaceWebSocket.close();
+                InterfaceWebSocket = null;
+            }
         }
     }
 }

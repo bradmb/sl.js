@@ -13,6 +13,7 @@ module SLjs {
 
     export var VisitorId: string;
     export var Users: Models.ISLSupportUser[] = <any>{};
+    export var AppWebSocket: Socket;
     export var Config: Models.ISLConfig = {
         applicationName: Strings.APP_NAME,
         channel: null,
@@ -37,18 +38,18 @@ module SLjs {
                     Config.visitorName = "[" + VisitorId + "] " + visitorName + " (" + Config.applicationName + ")";
                     Interface.ConstructConversationWindow();
 
-                    var socket = new Socket();
-                    socket.GetWebSocketData(function (webSocketUrl: string) {
-                        socket.ConnectWebSocket(webSocketUrl);
+                    AppWebSocket = new Socket();
+                    AppWebSocket.GetWebSocketData(function (webSocketUrl: string) {
+                        AppWebSocket.ConnectWebSocket(webSocketUrl);
                     });
                 });
             } else {
                 Config.visitorName = "[" + VisitorId + "] " + Config.visitorName + " (" + Config.applicationName + ")";
                 Interface.ConstructConversationWindow();
 
-                var socket = new Socket();
-                socket.GetWebSocketData(function (webSocketUrl: string) {
-                    socket.ConnectWebSocket(webSocketUrl);
+                AppWebSocket = new Socket();
+                AppWebSocket.GetWebSocketData(function (webSocketUrl: string) {
+                    AppWebSocket.ConnectWebSocket(webSocketUrl);
                 });
             }
         }
