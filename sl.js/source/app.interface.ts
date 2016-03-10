@@ -1,4 +1,4 @@
-﻿module SLjs.Interface {
+﻿module SLjs.HtmlConstructor {
     "use strict";
 
     var ApplicationInterface: HTMLDivElement;

@@ -4,6 +4,31 @@
 
 This script was designed based on a need I had to provide a simple Slack support interface for end users of an application, but also as a challenge to myself to build a full JavaScript plugin without using JQuery (which I have become extremely comfortable using for everything).
 
+----------
+
+## How it works ##
+
+When a user pulls up this support window, it will establish a websocket connection to the Slack API, pulling messages back in real time.
+
+As more than one user could be in the support channel at a time, messages to users of this interface are filtered, requiring you to specify a unique id at the beginning of your message in Slack.
+
+Not only will this allow you and your team to chat between each other about the question without it spamming the user, but it will also ensure that messages directed to that user don't show up in other user windows.
+
+The first message from a user sent from this interface will include a message attachment that instructs how to reply to this user by using their unique id. The unique id will also show next to the user's name in each message they send.
+
+----------
+
+## What it looks like ##
+This is the display for the default "float" configuration. If docking to the left/right side of the screen, you will instead get a narrow interface that extends from the top to the bottom of your page.
+
+### The welcome screen (if you don't pass a name in the config) ###
+<img src="http://i.imgur.com/SyIIp3o.png" width="500" />
+
+### The chat interface with an ongoing conversation ###
+<img src="http://i.imgur.com/IXlHfFL.png" width="500" />
+
+### What it looks like from a Slack channel ###
+<img src="http://i.imgur.com/n1NcOYH.png" width="500" />
 
 ----------
 
@@ -14,7 +39,7 @@ This script was designed based on a need I had to provide a simple Slack support
 
 ----------
 
-## How to setup ##
+## How to install ##
 Download a copy of the [latest release from the releases page](https://github.com/bradmb/sl.js/releases) and reference them in your code.
 
 If you're using Visual Studio, simply grab the file off NuGet to ensure you have access to the latest package at all times:
@@ -23,18 +48,29 @@ If you're using Visual Studio, simply grab the file off NuGet to ensure you have
 PM> Install-Package sl.js -Pre
 ```
 
-Today, running the script will fully display the interface, but a button binding will be coming soon (see: to do list). Until then, you will need to setup your own binding on a button to initialize the code.
+## How to setup ##
 
-To bring up the interface, simply call this:
+Your basic configuration items are simple: Your Slack token, the Slack Channel ID, and the DIV where this will use as the spot where all the elements are rendered:
 ```javascript
 var slConfig = {
     token: 'SLACK-TOKEN',
     channel: 'SLACK-CHANNEL',
     element: 'PAGE-DIV-ID'
 };
-
-var sl = new SLjs.Application(slConfig);
 ```
+
+
+To bind this interface to a button that will display on click, use this:
+```javascript
+var sl = new SLjs.Button('BUTTON-ID', slConfig);
+```
+
+To bring up the interface immediately (no binding to a button), simply call this:
+```javascript
+var sl = new SLjs.Interface(slConfig);
+```
+
+## Extra configuration options ##
 
 The configuration options listed above are the *minimum* options required. You are free to fill in additional parameters, including:
 
@@ -67,22 +103,8 @@ workDates: {
 
 ----------
 
-## How it works ##
-
-When a user pulls up this support window, it will establish a websocket connection to the Slack API, pulling messages back in real time.
-
-As more than one user could be in the support channel at a time, messages to users of this interface are filtered, requiring you to specify a unique id at the beginning of your message in Slack.
-
-Not only will this allow you and your team to chat between each other about the question without it spamming the user, but it will also ensure that messages directed to that user don't show up in other user windows.
-
-The first message from a user sent from this interface will include a message attachment that instructs how to reply to this user by using their unique id. The unique id will also show next to the user's name in each message they send.
-
-----------
-
 ## To do ##
-- Add non-websocket backup feature
-- Add server-side features (id generation, traffic routing)
 - ~~Add additional display methods (docking to left/right of page)~~
-- Add button binding options
+- ~~Add button binding options~~
 - Add support for parsing Slack message edits
 - ~~Add support work hours~~

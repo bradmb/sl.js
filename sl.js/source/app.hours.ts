@@ -57,21 +57,25 @@
 
             var currentHourUtc = currentDate.getUTCHours();
             if (Config.workDates.stopHourUtc < Config.workDates.startHourUtc) {
-                if (Config.workDates.startHourUtc < currentHourUtc && Config.workDates.stopHourUtc > currentHourUtc) {
+                if (Config.workDates.startHourUtc < currentHourUtc
+                    && Config.workDates.stopHourUtc > currentHourUtc) {
                     return false;
                 }
             } else {
-                if (Config.workDates.startHourUtc > currentHourUtc || Config.workDates.stopHourUtc < currentHourUtc) {
+                if (Config.workDates.startHourUtc > currentHourUtc
+                    || Config.workDates.stopHourUtc < currentHourUtc) {
                     return false;
                 }
             }
 
             var currentMinutes = currentDate.getMinutes();
-            if (Config.workDates.startHourUtc === currentHourUtc && Config.workDates.startMinutes >= currentMinutes) {
+            if (Config.workDates.startHourUtc === currentHourUtc
+                && Config.workDates.startMinutes >= currentMinutes) {
                 return false;
             }
 
-            if (Config.workDates.stopHourUtc === currentHourUtc && Config.workDates.stopMinutes <= currentMinutes) {
+            if (Config.workDates.stopHourUtc === currentHourUtc
+                && Config.workDates.stopMinutes <= currentMinutes) {
                 return false;
             }
 

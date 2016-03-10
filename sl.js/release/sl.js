@@ -23,7 +23,7 @@ var SLjs;
                 case "message":
                     var messageData = msgPreParse;
                     if (messageData.username !== undefined && messageData.username === SLjs.Config.visitorName) {
-                        SLjs.Interface.AddChatMessage({
+                        SLjs.HtmlConstructor.AddChatMessage({
                             icon_emoji: messageData.icons.image_64,
                             text: messageData.text,
                             username: "You"
@@ -31,7 +31,7 @@ var SLjs;
                     }
                     else if (messageData.text.substr(0, SLjs.VisitorId.length + 1) === "!" + SLjs.VisitorId) {
                         var user = SLjs.Users[messageData.user];
-                        SLjs.Interface.AddChatMessage({
+                        SLjs.HtmlConstructor.AddChatMessage({
                             icon_emoji: user.image,
                             text: messageData.text.replace("!" + SLjs.VisitorId, ""),
                             username: user.name
@@ -99,20 +99,24 @@ var SLjs;
                 }
                 var currentHourUtc = currentDate.getUTCHours();
                 if (SLjs.Config.workDates.stopHourUtc < SLjs.Config.workDates.startHourUtc) {
-                    if (SLjs.Config.workDates.startHourUtc < currentHourUtc && SLjs.Config.workDates.stopHourUtc > currentHourUtc) {
+                    if (SLjs.Config.workDates.startHourUtc < currentHourUtc
+                        && SLjs.Config.workDates.stopHourUtc > currentHourUtc) {
                         return false;
                     }
                 }
                 else {
-                    if (SLjs.Config.workDates.startHourUtc > currentHourUtc || SLjs.Config.workDates.stopHourUtc < currentHourUtc) {
+                    if (SLjs.Config.workDates.startHourUtc > currentHourUtc
+                        || SLjs.Config.workDates.stopHourUtc < currentHourUtc) {
                         return false;
                     }
                 }
                 var currentMinutes = currentDate.getMinutes();
-                if (SLjs.Config.workDates.startHourUtc === currentHourUtc && SLjs.Config.workDates.startMinutes >= currentMinutes) {
+                if (SLjs.Config.workDates.startHourUtc === currentHourUtc
+                    && SLjs.Config.workDates.startMinutes >= currentMinutes) {
                     return false;
                 }
-                if (SLjs.Config.workDates.stopHourUtc === currentHourUtc && SLjs.Config.workDates.stopMinutes <= currentMinutes) {
+                if (SLjs.Config.workDates.stopHourUtc === currentHourUtc
+                    && SLjs.Config.workDates.stopMinutes <= currentMinutes) {
                     return false;
                 }
                 return true;
@@ -154,8 +158,8 @@ var SLjs;
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
-    var Interface;
-    (function (Interface) {
+    var HtmlConstructor;
+    (function (HtmlConstructor) {
         "use strict";
         var ApplicationInterface;
         var ApplicationInterfaceBody;
@@ -191,7 +195,7 @@ var SLjs;
             ApplicationInterfaceBody.className = "sljs-app-wrapper";
             ApplicationInterface.appendChild(ApplicationInterfaceBody);
         }
-        Interface.ConstructInterface = ConstructInterface;
+        HtmlConstructor.ConstructInterface = ConstructInterface;
         function Dispose() {
             ChatMessageBoxItems = [];
             ChatMessageBox.remove();
@@ -246,7 +250,7 @@ var SLjs;
             };
             nameInputBox.appendChild(nameInputBtn);
         }
-        Interface.ConstructWelcomeWithName = ConstructWelcomeWithName;
+        HtmlConstructor.ConstructWelcomeWithName = ConstructWelcomeWithName;
         function ConstructConversationWindow() {
             ApplicationInterface.className = "sljs-chat";
             ApplicationInterfaceBody.innerHTML = "";
@@ -290,7 +294,7 @@ var SLjs;
                 });
             }
         }
-        Interface.ConstructConversationWindow = ConstructConversationWindow;
+        HtmlConstructor.ConstructConversationWindow = ConstructConversationWindow;
         function AddChatMessage(message) {
             var urlRegexMatch = SLjs.Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
             while (urlRegexMatch != null) {
@@ -318,7 +322,7 @@ var SLjs;
             ChatMessageBoxItems.push(message);
             RenderChatMessages();
         }
-        Interface.AddChatMessage = AddChatMessage;
+        HtmlConstructor.AddChatMessage = AddChatMessage;
         function RenderChatMessages() {
             ChatMessageBox.innerHTML = "";
             for (var _i = 0; _i < ChatMessageBoxItems.length; _i++) {
@@ -355,7 +359,7 @@ var SLjs;
             }
             ChatMessageBox.scrollTop = ChatMessageBox.scrollHeight;
         }
-    })(Interface = SLjs.Interface || (SLjs.Interface = {}));
+    })(HtmlConstructor = SLjs.HtmlConstructor || (SLjs.HtmlConstructor = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
@@ -495,15 +499,44 @@ var SLjs;
         token: null,
         position: "float"
     };
-    var Application = (function () {
-        function Application(config) {
-            this.mapConfigParameters(config);
-            this.constructData();
-            SLjs.Interface.ConstructInterface(document.getElementById(SLjs.Config.element));
+    var Button = (function () {
+        function Button(buttonId, config) {
+            SLjs.AppHandler = new ApplicationHandler();
+            SLjs.AppHandler.mapConfigParameters(config);
+            SLjs.AppHandler.constructData();
+            this.init(buttonId);
+        }
+        Button.prototype.init = function (buttonId) {
+            var activatorButton = document.getElementById(buttonId);
+            activatorButton.onclick = function () {
+                SLjs.AppHandler.constructInterface();
+            };
+        };
+        return Button;
+    })();
+    SLjs.Button = Button;
+    var Interface = (function () {
+        function Interface(config) {
+            SLjs.AppHandler = new ApplicationHandler();
+            SLjs.AppHandler.mapConfigParameters(config);
+            SLjs.AppHandler.constructData();
+            this.init();
+        }
+        Interface.prototype.init = function () {
+            SLjs.AppHandler.constructInterface();
+        };
+        return Interface;
+    })();
+    SLjs.Interface = Interface;
+    var ApplicationHandler = (function () {
+        function ApplicationHandler() {
+        }
+        ApplicationHandler.prototype.constructInterface = function () {
+            SLjs.HtmlConstructor.ConstructInterface(document.getElementById(SLjs.Config.element));
             if (SLjs.Config.visitorName === null || SLjs.Config.visitorName === undefined) {
-                SLjs.Interface.ConstructWelcomeWithName(function (visitorName) {
+                SLjs.HtmlConstructor.ConstructWelcomeWithName(function (visitorName) {
                     SLjs.Config.visitorName = "[" + SLjs.VisitorId + "] " + visitorName + " (" + SLjs.Config.applicationName + ")";
-                    SLjs.Interface.ConstructConversationWindow();
+                    SLjs.HtmlConstructor.ConstructConversationWindow();
                     SLjs.AppWebSocket = new SLjs.Socket();
                     SLjs.AppWebSocket.GetWebSocketData(function (webSocketUrl) {
                         SLjs.AppWebSocket.ConnectWebSocket(webSocketUrl);
@@ -512,14 +545,14 @@ var SLjs;
             }
             else {
                 SLjs.Config.visitorName = "[" + SLjs.VisitorId + "] " + SLjs.Config.visitorName + " (" + SLjs.Config.applicationName + ")";
-                SLjs.Interface.ConstructConversationWindow();
+                SLjs.HtmlConstructor.ConstructConversationWindow();
                 SLjs.AppWebSocket = new SLjs.Socket();
                 SLjs.AppWebSocket.GetWebSocketData(function (webSocketUrl) {
                     SLjs.AppWebSocket.ConnectWebSocket(webSocketUrl);
                 });
             }
-        }
-        Application.prototype.constructData = function () {
+        };
+        ApplicationHandler.prototype.constructData = function () {
             SLjs.VisitorId = this.generateVisitorId();
             if (SLjs.Config.visitorIcon === null || SLjs.Config.visitorIcon === undefined) {
                 SLjs.Config.visitorIcon = SLjs.Strings.VISITOR_ICON;
@@ -534,20 +567,20 @@ var SLjs;
                 SLjs.Config.supportGroupName = SLjs.Strings.INTERNAL_SUPPORT_GROUP_NAME;
             }
         };
-        Application.prototype.generateVisitorId = function () {
+        ApplicationHandler.prototype.generateVisitorId = function () {
             var currentDate = new Date();
             var uniqueId = currentDate.getMilliseconds() + "" + Math.floor((Math.random() * 10) + 1);
             return uniqueId;
         };
-        Application.prototype.mapConfigParameters = function (config) {
+        ApplicationHandler.prototype.mapConfigParameters = function (config) {
             for (var param in config) {
                 if (config.hasOwnProperty(param) && config[param] !== undefined) {
                     SLjs.Config[param] = config[param];
                 }
             }
         };
-        return Application;
+        return ApplicationHandler;
     })();
-    SLjs.Application = Application;
+    SLjs.ApplicationHandler = ApplicationHandler;
 })(SLjs || (SLjs = {}));
 //# sourceMappingURL=sl.js.map

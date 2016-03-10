@@ -134,7 +134,7 @@
 
 #sljs-wrapper.sljs-pos-side #sljs-interface.sljs-chat .sljs-chat-message-input {
     position: absolute;
-    bottom: 0;
+    bottom: 5px;
 
     padding: 10px;
 
