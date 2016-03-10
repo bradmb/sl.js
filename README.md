@@ -14,7 +14,7 @@ This script was designed based on a need I had to provide a simple Slack support
 
 ----------
 
-## How to setup ##
+## How to install ##
 Download a copy of the [latest release from the releases page](https://github.com/bradmb/sl.js/releases) and reference them in your code.
 
 If you're using Visual Studio, simply grab the file off NuGet to ensure you have access to the latest package at all times:
@@ -23,18 +23,29 @@ If you're using Visual Studio, simply grab the file off NuGet to ensure you have
 PM> Install-Package sl.js -Pre
 ```
 
-Today, running the script will fully display the interface, but a button binding will be coming soon (see: to do list). Until then, you will need to setup your own binding on a button to initialize the code.
+## How to setup ##
 
-To bring up the interface, simply call this:
+Your basic configuration items are simple: Your Slack token, the Slack Channel ID, and the DIV where this will use as the spot where all the elements are rendered:
 ```javascript
 var slConfig = {
     token: 'SLACK-TOKEN',
     channel: 'SLACK-CHANNEL',
     element: 'PAGE-DIV-ID'
 };
-
-var sl = new SLjs.Application(slConfig);
 ```
+
+
+To bind this interface to a button that will display on click, use this:
+```javascript
+var sl = new SLjs.Button('BUTTON-ID', slConfig);
+```
+
+To bring up the interface immediately (no binding to a button), simply call this:
+```javascript
+var sl = new SLjs.Interface(slConfig);
+```
+
+## Extra configuration options ##
 
 The configuration options listed above are the *minimum* options required. You are free to fill in additional parameters, including:
 
