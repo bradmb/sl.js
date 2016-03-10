@@ -4,6 +4,17 @@
 
 This script was designed based on a need I had to provide a simple Slack support interface for end users of an application, but also as a challenge to myself to build a full JavaScript plugin without using JQuery (which I have become extremely comfortable using for everything).
 
+----------
+
+## How it works ##
+
+When a user pulls up this support window, it will establish a websocket connection to the Slack API, pulling messages back in real time.
+
+As more than one user could be in the support channel at a time, messages to users of this interface are filtered, requiring you to specify a unique id at the beginning of your message in Slack.
+
+Not only will this allow you and your team to chat between each other about the question without it spamming the user, but it will also ensure that messages directed to that user don't show up in other user windows.
+
+The first message from a user sent from this interface will include a message attachment that instructs how to reply to this user by using their unique id. The unique id will also show next to the user's name in each message they send.
 
 ----------
 
@@ -78,22 +89,8 @@ workDates: {
 
 ----------
 
-## How it works ##
-
-When a user pulls up this support window, it will establish a websocket connection to the Slack API, pulling messages back in real time.
-
-As more than one user could be in the support channel at a time, messages to users of this interface are filtered, requiring you to specify a unique id at the beginning of your message in Slack.
-
-Not only will this allow you and your team to chat between each other about the question without it spamming the user, but it will also ensure that messages directed to that user don't show up in other user windows.
-
-The first message from a user sent from this interface will include a message attachment that instructs how to reply to this user by using their unique id. The unique id will also show next to the user's name in each message they send.
-
-----------
-
 ## To do ##
-- Add non-websocket backup feature
-- Add server-side features (id generation, traffic routing)
 - ~~Add additional display methods (docking to left/right of page)~~
-- Add button binding options
+- ~~Add button binding options~~
 - Add support for parsing Slack message edits
 - ~~Add support work hours~~
