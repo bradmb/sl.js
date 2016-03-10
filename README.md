@@ -18,6 +18,20 @@ The first message from a user sent from this interface will include a message at
 
 ----------
 
+## What it looks like ##
+This is the display for the default "float" configuration. If docking to the left/right side of the screen, you will instead get a narrow interface that extends from the top to the bottom of your page.
+
+### The welcome screen (if you don't pass a name in the config) ###
+<img src="http://i.imgur.com/SyIIp3o.png" width="500" />
+
+### The chat interface with an ongoing conversation ###
+<img src="http://i.imgur.com/IXlHfFL.png" width="500" />
+
+### What it looks like from a Slack channel ###
+<img src="http://i.imgur.com/n1NcOYH.png" width="500" />
+
+----------
+
 ## Requirements ##
 1. The .css and .js files from this script included in your page
 2. [A Slack API Token](https://api.slack.com/tokens)
