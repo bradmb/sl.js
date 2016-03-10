@@ -17,7 +17,7 @@
                 var messageData: Models.ISLSocketMessage = msgPreParse;
 
                 if (messageData.username !== undefined && messageData.username === Config.visitorName) {
-                    Interface.AddChatMessage({
+                    HtmlConstructor.AddChatMessage({
                         icon_emoji: messageData.icons.image_64,
                         text: messageData.text,
                         username: "You"
@@ -25,7 +25,7 @@
                 } else if (messageData.text.substr(0, VisitorId.length + 1) === "!" + VisitorId) {
                     var user = (Users[messageData.user] as Models.ISLSupportUser);
 
-                    Interface.AddChatMessage({
+                    HtmlConstructor.AddChatMessage({
                         icon_emoji: user.image,
                         text: messageData.text.replace("!" + VisitorId, ""),
                         username: user.name

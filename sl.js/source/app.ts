@@ -14,6 +14,7 @@ module SLjs {
     export var VisitorId: string;
     export var Users: Models.ISLSupportUser[] = <any>{};
     export var AppWebSocket: Socket;
+    export var AppHandler: ApplicationHandler;
     export var Config: Models.ISLConfig = {
         applicationName: Strings.APP_NAME,
         channel: null,
@@ -22,21 +23,53 @@ module SLjs {
         position: "float"
     };
 
-    export class Application {
+    export class Button {
         /**
-         * Initializes the application and displays the interface
+         * Initializes the application and binds the button onclick event
+         * @param config
+         */
+        constructor(buttonId: string, config: Models.ISLConfig) {
+            AppHandler = new ApplicationHandler();
+            AppHandler.mapConfigParameters(config);
+            AppHandler.constructData();
+
+            this.init(buttonId);
+        }
+
+        init(buttonId: string) {
+            var activatorButton = document.getElementById(buttonId);
+            activatorButton.onclick = function () {
+                AppHandler.constructInterface();
+            }
+        }
+    }
+
+    export class Interface {
+        /**
+         * Initializes the application and immediately displays the interface
          * @param config
          */
         constructor(config: Models.ISLConfig) {
-            this.mapConfigParameters(config);
-            this.constructData();
+            AppHandler = new ApplicationHandler();
+            AppHandler.mapConfigParameters(config);
+            AppHandler.constructData();
 
-            Interface.ConstructInterface(document.getElementById(Config.element));
+            this.init();
+        }
+
+        init() {
+            AppHandler.constructInterface();
+        }
+    }
+
+    export class ApplicationHandler {
+        constructInterface() {
+            HtmlConstructor.ConstructInterface(document.getElementById(Config.element));
 
             if (Config.visitorName === null || Config.visitorName === undefined) {
-                Interface.ConstructWelcomeWithName(function (visitorName: string) {
+                HtmlConstructor.ConstructWelcomeWithName(function (visitorName: string) {
                     Config.visitorName = "[" + VisitorId + "] " + visitorName + " (" + Config.applicationName + ")";
-                    Interface.ConstructConversationWindow();
+                    HtmlConstructor.ConstructConversationWindow();
 
                     AppWebSocket = new Socket();
                     AppWebSocket.GetWebSocketData(function (webSocketUrl: string) {
@@ -45,7 +78,7 @@ module SLjs {
                 });
             } else {
                 Config.visitorName = "[" + VisitorId + "] " + Config.visitorName + " (" + Config.applicationName + ")";
-                Interface.ConstructConversationWindow();
+                HtmlConstructor.ConstructConversationWindow();
 
                 AppWebSocket = new Socket();
                 AppWebSocket.GetWebSocketData(function (webSocketUrl: string) {
