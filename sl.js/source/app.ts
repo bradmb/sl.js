@@ -1,8 +1,12 @@
-﻿/// <reference path="app.models.ts" />
+﻿/// <reference path="app.endpoints.ts" />
+/// <reference path="app.events.ts" />
+/// <reference path="app.hours.ts" />
 /// <reference path="app.http.ts" />
-/// <reference path="app.endpoints.ts" />
 /// <reference path="app.interface.ts" />
+/// <reference path="app.messaging.ts" />
+/// <reference path="app.models.ts" />
 /// <reference path="app.parameters.ts" />
+/// <reference path="app.socket.ts" />
 /// <reference path="app.strings.ts" />
 
 /**
