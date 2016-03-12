@@ -16,7 +16,8 @@
         var packet: Models.ISLMessage = {
             text: message,
             username: Config.visitorName,
-            icon_emoji: Config.visitorIcon
+            icon_emoji: Config.visitorIcon,
+            timespan: ""
         };
 
         Http.Action(packet, Endpoints.PostMessage);
@@ -39,7 +40,8 @@
             attachments: userDataPoints,
             text: message,
             username: Config.visitorName,
-            icon_emoji: Config.visitorIcon
+            icon_emoji: Config.visitorIcon,
+            timespan: ""
         };
 
         Http.Action(packet, Endpoints.PostMessage);

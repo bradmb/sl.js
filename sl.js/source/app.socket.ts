@@ -33,23 +33,8 @@
         ConnectWebSocket(url: string) {
             InterfaceWebSocket = new WebSocket(url);
 
-            InterfaceWebSocket.onopen = function (event: Event) {
-                // console.log("ws:connection opened");
-                // console.log(event);
-            };
-
             InterfaceWebSocket.onmessage = function (message: MessageEvent) {
                 Events.OnMessageReceived(message.data);
-            };
-
-            InterfaceWebSocket.onerror = function (event: Event) {
-                // console.log("ws:connection error");
-                // console.log(event);
-            };
-
-            InterfaceWebSocket.onclose = function (event: CloseEvent) {
-                // console.log("ws:connection closed");
-                // console.log(event);
             };
         }
 

@@ -45,6 +45,7 @@ module SLjs.Models {
         isImportantMessage?: boolean;
         isErrorMessage?: boolean;
         text: string;
+        timespan: string;
         username: string;
         icon_emoji: string;
     }
@@ -107,8 +108,10 @@ module SLjs.Models {
         text: string;
         ts: string;
         type: string;
+        subtype: string;
         user: string;
         username: string;
+        message: ISLSocketMessage;
         icons: ISLSocketMessageIcon;
     }
 
