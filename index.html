@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Sl.js by bradmb</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Sl.js</h1>
+        <h2>JavaScript based support client for Slack</h2>
+        <a href="https://github.com/bradmb/sl.js" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="sljs" class="anchor" href="#sljs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>sl.js</h1>
+
+<p><em>A plugin-free JavaScript support client for Slack</em></p>
+
+<p>This script was designed based on a need I had to provide a simple Slack support interface for end users of an application, but also as a challenge to myself to build a full JavaScript plugin without using JQuery (which I have become extremely comfortable using for everything).</p>
+
+<hr>
+
+<h2>
+<a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How it works</h2>
+
+<p>When a user pulls up this support window, it will establish a websocket connection to the Slack API, pulling messages back in real time.</p>
+
+<p>As more than one user could be in the support channel at a time, messages to users of this interface are filtered, requiring you to specify a unique id at the beginning of your message in Slack.</p>
+
+<p>Not only will this allow you and your team to chat between each other about the question without it spamming the user, but it will also ensure that messages directed to that user don't show up in other user windows.</p>
+
+<p>The first message from a user sent from this interface will include a message attachment that instructs how to reply to this user by using their unique id. The unique id will also show next to the user's name in each message they send.</p>
+
+<hr>
+
+<h2>
+<a id="what-it-looks-like" class="anchor" href="#what-it-looks-like" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What it looks like</h2>
+
+<p>This is the display for the default "float" configuration. If docking to the left/right side of the screen, you will instead get a narrow interface that extends from the top to the bottom of your page.</p>
+
+<h3>
+<a id="the-welcome-screen-if-you-dont-pass-a-name-in-the-config" class="anchor" href="#the-welcome-screen-if-you-dont-pass-a-name-in-the-config" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The welcome screen (if you don't pass a name in the config)</h3>
+
+<p><img src="http://i.imgur.com/SyIIp3o.png" width="500"></p>
+
+<h3>
+<a id="the-chat-interface-with-an-ongoing-conversation" class="anchor" href="#the-chat-interface-with-an-ongoing-conversation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>The chat interface with an ongoing conversation</h3>
+
+<p><img src="http://i.imgur.com/IXlHfFL.png" width="500"></p>
+
+<h3>
+<a id="what-it-looks-like-from-a-slack-channel" class="anchor" href="#what-it-looks-like-from-a-slack-channel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What it looks like from a Slack channel</h3>
+
+<p><img src="http://i.imgur.com/n1NcOYH.png" width="500"></p>
+
+<hr>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
+
+<ol>
+<li>The .css and .js files from this script included in your page</li>
+<li><a href="https://api.slack.com/tokens">A Slack API Token</a></li>
+<li>
+<a href="https://api.slack.com/methods/channels.list/test">The Slack Channel ID</a> for the channel that you want to run this script in</li>
+</ol>
+
+<hr>
+
+<h2>
+<a id="how-to-install" class="anchor" href="#how-to-install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to install</h2>
+
+<p>Download a copy of the <a href="https://github.com/bradmb/sl.js/releases">latest release from the releases page</a> and reference them in your code.</p>
+
+<p>If you're using Visual Studio, simply grab the file off NuGet to ensure you have access to the latest package at all times:</p>
+
+<div class="highlight highlight-source-powershell"><pre>PM<span class="pl-k">&gt;</span> <span class="pl-c1">Install-Package</span> sl.js <span class="pl-k">-</span>Pre</pre></div>
+
+<h2>
+<a id="how-to-setup" class="anchor" href="#how-to-setup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to setup</h2>
+
+<p>Your basic configuration items are simple: Your Slack token, the Slack Channel ID, and the DIV where this will use as the spot where all the elements are rendered:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> slConfig <span class="pl-k">=</span> {
+    token<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>SLACK-TOKEN<span class="pl-pds">'</span></span>,
+    channel<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>SLACK-CHANNEL<span class="pl-pds">'</span></span>,
+    element<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>PAGE-DIV-ID<span class="pl-pds">'</span></span>
+};</pre></div>
+
+<p>To bind this interface to a button that will display on click, use this:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> sl <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">SLjs.Button</span>(<span class="pl-s"><span class="pl-pds">'</span>BUTTON-ID<span class="pl-pds">'</span></span>, slConfig);</pre></div>
+
+<p>To bring up the interface immediately (no binding to a button), simply call this:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">var</span> sl <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">SLjs.Interface</span>(slConfig);</pre></div>
+
+<h2>
+<a id="extra-configuration-options" class="anchor" href="#extra-configuration-options" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Extra configuration options</h2>
+
+<p>The configuration options listed above are the <em>minimum</em> options required. You are free to fill in additional parameters, including:</p>
+
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+<th>Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>visitorName</td>
+<td>string</td>
+<td>If filled out, the script will skip the question that asks the user for their name. Fill this in if you have some way to automatically identify a user's name</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>visitorIcon</td>
+<td>string</td>
+<td>This defaults to the <em><img class="emoji" title=":speech_balloon:" alt=":speech_balloon:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f4ac.png" height="20" width="20" align="absmiddle"></em> emoji in Slack, but feel free to change this to any other emoji (default or custom) from your Slack instance.</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>applicationName</td>
+<td>string</td>
+<td>This will override the default application name (SL.js) with your own. It's recommended you fill this parameter out, as it will show up to the user and in your Slack channel, allowing multiple sites or pages to point at one Slack channel, while easily identifying where the visitor is coming from.</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>supportGroupName</td>
+<td>string</td>
+<td>This shows in the user support interface, and will show what team the user is talking to. When the interface shows messages coming from Slack, it will attempt to show the Slack user's first name only, followed by this support group name. By default, this will show "<em>Support Team</em>".</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>position</td>
+<td>string</td>
+<td>Allows for docking the support interface to the left, right, or floating it in the center of the page. By default, this will float in the center of the page.</td>
+<td>left, right, float</td>
+</tr>
+<tr>
+<td>workDates</td>
+<td>object</td>
+<td>Allows you to specify the standard work hours that support is generally available. This will not prevent users from submitting messages, but display a notice that support may not be available. By responding to the user in Slack, this notice will be removed so the user can have a normal support conversation.</td>
+<td>See Below</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="work-dates-how-to-configure" class="anchor" href="#work-dates-how-to-configure" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Work Dates: How To Configure</h2>
+
+<p>Start hour and stop hour must be provided using the UTC time zone. You can leave out a day of the week and it will consider that a non-working day.</p>
+
+<p><strong>Example parameter configuration for work dates</strong></p>
+
+<div class="highlight highlight-source-js"><pre>workDates<span class="pl-k">:</span> {
+    monday<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    tuesday<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    wednesday<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    thursday<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    friday<span class="pl-k">:</span> <span class="pl-c1">true</span>,
+    startHourUtc<span class="pl-k">:</span> <span class="pl-c1">15</span>,
+    startMinutes<span class="pl-k">:</span> <span class="pl-c1">0</span>,
+    stopHourUtc<span class="pl-k">:</span> <span class="pl-c1">1</span>,
+    stopMinutes<span class="pl-k">:</span> <span class="pl-c1">30</span>
+}</pre></div>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/bradmb/sl.js/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/bradmb/sl.js/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/bradmb/sl.js"></a> is maintained by <a href="https://github.com/bradmb">bradmb</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
