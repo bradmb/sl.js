@@ -100,11 +100,3 @@ workDates: {
     stopMinutes: 30
 }
 ```
-
-----------
-
-## To do ##
-- ~~Add additional display methods (docking to left/right of page)~~
-- ~~Add button binding options~~
-- Add support for parsing Slack message edits
-- ~~Add support work hours~~
