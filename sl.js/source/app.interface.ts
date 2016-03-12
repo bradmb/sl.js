@@ -176,7 +176,8 @@
                 text: Strings.CHAT_INITIAL_MSG.replace("%APPNAME%", Strings.APP_NAME),
                 username: Strings.APP_NAME,
                 icon_emoji: null,
-                isImportantMessage: true
+                isImportantMessage: true,
+                timespan: ""
             });
         } else {
             ShowingWorkHourMessage = true;
@@ -185,7 +186,8 @@
                 username: Strings.APP_NAME,
                 icon_emoji: null,
                 isImportantMessage: true,
-                isErrorMessage: true
+                isErrorMessage: true,
+                timespan: ""
             });
         }
     }
@@ -227,6 +229,34 @@
 
         ChatMessageBoxItems.push(message);
         RenderChatMessages();
+    }
+
+    /**
+     * Adds a new chat message into the conversation window
+     * @param message
+     */
+    export function UpdateChatMessage(message: Models.ISLMessage) {
+        var urlRegexMatch = Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
+        while (urlRegexMatch != null) {
+            if (urlRegexMatch == null) {
+                return;
+            }
+
+            var link = document.createElement("a");
+            link.href = urlRegexMatch[1];
+            link.text = urlRegexMatch[1];
+            link.target = "_blank";
+
+            message.text = message.text.replace(urlRegexMatch[0], link.outerHTML);
+            urlRegexMatch = Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
+        }
+
+        ChatMessageBoxItems.forEach(function (item: Models.ISLMessage, index: number) {
+            if (item.timespan === message.timespan) {
+                ChatMessageBoxItems[index].text = message.text;
+                RenderChatMessages();
+            }
+        });
     }
 
     /**

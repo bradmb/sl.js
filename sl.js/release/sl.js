@@ -26,7 +26,19 @@ var SLjs;
                         SLjs.HtmlConstructor.AddChatMessage({
                             icon_emoji: messageData.icons.image_64,
                             text: messageData.text,
-                            username: "You"
+                            username: "You",
+                            timespan: ""
+                        });
+                    }
+                    else if (messageData.text === undefined
+                        && messageData.subtype !== undefined
+                        && messageData.subtype === "message_changed") {
+                        var user = SLjs.Users[messageData.user];
+                        SLjs.HtmlConstructor.UpdateChatMessage({
+                            icon_emoji: "",
+                            username: "",
+                            text: messageData.message.text.replace("!" + SLjs.VisitorId, ""),
+                            timespan: messageData.message.ts
                         });
                     }
                     else if (messageData.text.substr(0, SLjs.VisitorId.length + 1) === "!" + SLjs.VisitorId) {
@@ -34,7 +46,8 @@ var SLjs;
                         SLjs.HtmlConstructor.AddChatMessage({
                             icon_emoji: user.image,
                             text: messageData.text.replace("!" + SLjs.VisitorId, ""),
-                            username: user.name
+                            username: user.name,
+                            timespan: messageData.ts
                         });
                     }
                     break;
@@ -280,7 +293,8 @@ var SLjs;
                     text: SLjs.Strings.CHAT_INITIAL_MSG.replace("%APPNAME%", SLjs.Strings.APP_NAME),
                     username: SLjs.Strings.APP_NAME,
                     icon_emoji: null,
-                    isImportantMessage: true
+                    isImportantMessage: true,
+                    timespan: ""
                 });
             }
             else {
@@ -290,7 +304,8 @@ var SLjs;
                     username: SLjs.Strings.APP_NAME,
                     icon_emoji: null,
                     isImportantMessage: true,
-                    isErrorMessage: true
+                    isErrorMessage: true,
+                    timespan: ""
                 });
             }
         }
@@ -323,6 +338,27 @@ var SLjs;
             RenderChatMessages();
         }
         HtmlConstructor.AddChatMessage = AddChatMessage;
+        function UpdateChatMessage(message) {
+            var urlRegexMatch = SLjs.Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
+            while (urlRegexMatch != null) {
+                if (urlRegexMatch == null) {
+                    return;
+                }
+                var link = document.createElement("a");
+                link.href = urlRegexMatch[1];
+                link.text = urlRegexMatch[1];
+                link.target = "_blank";
+                message.text = message.text.replace(urlRegexMatch[0], link.outerHTML);
+                urlRegexMatch = SLjs.Parameters.REGEX_URL_MATCH_QUERY.exec(message.text);
+            }
+            ChatMessageBoxItems.forEach(function (item, index) {
+                if (item.timespan === message.timespan) {
+                    ChatMessageBoxItems[index].text = message.text;
+                    RenderChatMessages();
+                }
+            });
+        }
+        HtmlConstructor.UpdateChatMessage = UpdateChatMessage;
         function RenderChatMessages() {
             ChatMessageBox.innerHTML = "";
             for (var _i = 0; _i < ChatMessageBoxItems.length; _i++) {
@@ -375,7 +411,8 @@ var SLjs;
             var packet = {
                 text: message,
                 username: SLjs.Config.visitorName,
-                icon_emoji: SLjs.Config.visitorIcon
+                icon_emoji: SLjs.Config.visitorIcon,
+                timespan: ""
             };
             SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage);
         }
@@ -391,7 +428,8 @@ var SLjs;
                 attachments: userDataPoints,
                 text: message,
                 username: SLjs.Config.visitorName,
-                icon_emoji: SLjs.Config.visitorIcon
+                icon_emoji: SLjs.Config.visitorIcon,
+                timespan: ""
             };
             SLjs.Http.Action(packet, SLjs.Endpoints.PostMessage);
         }
@@ -413,6 +451,31 @@ var SLjs;
         Parameters.INTERFACE_DIV_ID = "sljs-interface";
         Parameters.INTERFACE_WRAPPER_DIV_ID = "sljs-wrapper";
     })(Parameters = SLjs.Parameters || (SLjs.Parameters = {}));
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    var Strings;
+    (function (Strings) {
+        "use strict";
+        Strings.INTERNAL_APP_NAME = "SL.js";
+        Strings.INTERNAL_SUPPORT_GROUP_NAME = "Support Team";
+        Strings.APP_NAME = Strings.INTERNAL_APP_NAME;
+        Strings.FIRST_MESSAGE_HEADER = "First message for this visit to the channel";
+        Strings.MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
+        Strings.ATTACHMENT_COLOR = "#D00000";
+        Strings.VISITOR_ICON = ":speech_balloon:";
+        Strings.WELCOME_MSG = "Welcome to the support channel for<br/>%APPNAME%!";
+        Strings.NAME_REQUIRED = "During our conversation, what can we call you?";
+        Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";
+        Strings.NAME_INPUT_VALIDATION_ERROR = "Sorry, can you try entering your name in again?";
+        Strings.NAME_INPUT_BUTTON = "Continue";
+        Strings.CHAT_INPUT_PLACEHOLDER = "Enter your message here. Use SHIFT+ENTER to create a new line.";
+        Strings.CHAT_AFTER_HOURS_MSG = "Welcome to the support channel for %APPNAME%. It is currently " +
+            "outside of standard support hours, so please leave a message and we " +
+            "will get back to you during standard business hours.";
+        Strings.CHAT_INITIAL_MSG = "Welcome to the support channel for %APPNAME%. " +
+            "Please ask your question in this channel and someone will get back to you shortly.";
+    })(Strings = SLjs.Strings || (SLjs.Strings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
@@ -443,14 +506,8 @@ var SLjs;
         };
         Socket.prototype.ConnectWebSocket = function (url) {
             SLjs.InterfaceWebSocket = new WebSocket(url);
-            SLjs.InterfaceWebSocket.onopen = function (event) {
-            };
             SLjs.InterfaceWebSocket.onmessage = function (message) {
                 SLjs.Events.OnMessageReceived(message.data);
-            };
-            SLjs.InterfaceWebSocket.onerror = function (event) {
-            };
-            SLjs.InterfaceWebSocket.onclose = function (event) {
             };
         };
         Socket.prototype.CloseWebSocket = function () {
@@ -462,31 +519,6 @@ var SLjs;
         return Socket;
     })();
     SLjs.Socket = Socket;
-})(SLjs || (SLjs = {}));
-var SLjs;
-(function (SLjs) {
-    var Strings;
-    (function (Strings) {
-        "use strict";
-        Strings.INTERNAL_APP_NAME = "SL.js";
-        Strings.INTERNAL_SUPPORT_GROUP_NAME = "Support Team";
-        Strings.APP_NAME = Strings.INTERNAL_APP_NAME;
-        Strings.FIRST_MESSAGE_HEADER = "First message for this visit to the channel";
-        Strings.MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
-        Strings.ATTACHMENT_COLOR = "#D00000";
-        Strings.VISITOR_ICON = ":speech_balloon:";
-        Strings.WELCOME_MSG = "Welcome to the support channel for<br/>%APPNAME%!";
-        Strings.NAME_REQUIRED = "During our conversation, what can we call you?";
-        Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";
-        Strings.NAME_INPUT_VALIDATION_ERROR = "Sorry, can you try entering your name in again?";
-        Strings.NAME_INPUT_BUTTON = "Continue";
-        Strings.CHAT_INPUT_PLACEHOLDER = "Enter your message here. Use SHIFT+ENTER to create a new line.";
-        Strings.CHAT_AFTER_HOURS_MSG = "Welcome to the support channel for %APPNAME%. It is currently " +
-            "outside of standard support hours, so please leave a message and we " +
-            "will get back to you during standard business hours.";
-        Strings.CHAT_INITIAL_MSG = "Welcome to the support channel for %APPNAME%. " +
-            "Please ask your question in this channel and someone will get back to you shortly.";
-    })(Strings = SLjs.Strings || (SLjs.Strings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
