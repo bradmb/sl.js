@@ -45,7 +45,7 @@ Download a copy of the [latest release from the releases page](https://github.co
 If you're using Visual Studio, simply grab the file off NuGet to ensure you have access to the latest package at all times:
 
 ```PowerShell
-PM> Install-Package sl.js -Pre
+PM> Install-Package sl.js
 ```
 
 ## How to setup ##
