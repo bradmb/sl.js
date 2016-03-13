@@ -2,7 +2,7 @@
 
 *A plugin-free JavaScript support client for Slack*
 
-This script was designed based on a need I had to provide a simple Slack support interface for end users of an application, but also as a challenge to myself to build a full JavaScript plugin without using JQuery (which I have become extremely comfortable using for everything).
+This script was designed based on a need I had to provide a simple Slack support interface for end users of an application, but also as a challenge to myself to build a full JavaScript plugin without using jQuery (which I have become extremely comfortable using for everything).
 
 ----------
 
