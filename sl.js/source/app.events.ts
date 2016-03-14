@@ -16,7 +16,7 @@
             case "message":
                 var messageData: Models.ISLSocketMessage = msgPreParse;
 
-                if (messageData.username !== undefined && messageData.username === Config.visitorName) {
+                if (messageData.username !== undefined && messageData.username === VisitorDisplayName) {
                     HtmlConstructor.AddChatMessage({
                         icon_emoji: messageData.icons.image_64,
                         text: messageData.text,

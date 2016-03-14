@@ -66,7 +66,7 @@
         ParentElement.cloneNode(true);
         ParentElement = null;
 
-        Config.visitorName = null;
+        VisitorDisplayName = null;
 
         AppWebSocket.CloseWebSocket();
     }

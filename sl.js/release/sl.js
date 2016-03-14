@@ -22,7 +22,7 @@ var SLjs;
                     break;
                 case "message":
                     var messageData = msgPreParse;
-                    if (messageData.username !== undefined && messageData.username === SLjs.Config.visitorName) {
+                    if (messageData.username !== undefined && messageData.username === SLjs.VisitorDisplayName) {
                         SLjs.HtmlConstructor.AddChatMessage({
                             icon_emoji: messageData.icons.image_64,
                             text: messageData.text,
@@ -217,7 +217,7 @@ var SLjs;
             ParentElement.innerHTML = "";
             ParentElement.cloneNode(true);
             ParentElement = null;
-            SLjs.Config.visitorName = null;
+            SLjs.VisitorDisplayName = null;
             SLjs.AppWebSocket.CloseWebSocket();
         }
         function ConstructWelcomeWithName(callback) {
@@ -410,7 +410,7 @@ var SLjs;
             }
             var packet = {
                 text: message,
-                username: SLjs.Config.visitorName,
+                username: SLjs.VisitorDisplayName,
                 icon_emoji: SLjs.Config.visitorIcon,
                 timespan: ""
             };
@@ -427,7 +427,7 @@ var SLjs;
             var packet = {
                 attachments: userDataPoints,
                 text: message,
-                username: SLjs.Config.visitorName,
+                username: SLjs.VisitorDisplayName,
                 icon_emoji: SLjs.Config.visitorIcon,
                 timespan: ""
             };
@@ -451,31 +451,6 @@ var SLjs;
         Parameters.INTERFACE_DIV_ID = "sljs-interface";
         Parameters.INTERFACE_WRAPPER_DIV_ID = "sljs-wrapper";
     })(Parameters = SLjs.Parameters || (SLjs.Parameters = {}));
-})(SLjs || (SLjs = {}));
-var SLjs;
-(function (SLjs) {
-    var Strings;
-    (function (Strings) {
-        "use strict";
-        Strings.INTERNAL_APP_NAME = "SL.js";
-        Strings.INTERNAL_SUPPORT_GROUP_NAME = "Support Team";
-        Strings.APP_NAME = Strings.INTERNAL_APP_NAME;
-        Strings.FIRST_MESSAGE_HEADER = "First message for this visit to the channel";
-        Strings.MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
-        Strings.ATTACHMENT_COLOR = "#D00000";
-        Strings.VISITOR_ICON = ":speech_balloon:";
-        Strings.WELCOME_MSG = "Welcome to the support channel for<br/>%APPNAME%!";
-        Strings.NAME_REQUIRED = "During our conversation, what can we call you?";
-        Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";
-        Strings.NAME_INPUT_VALIDATION_ERROR = "Sorry, can you try entering your name in again?";
-        Strings.NAME_INPUT_BUTTON = "Continue";
-        Strings.CHAT_INPUT_PLACEHOLDER = "Enter your message here. Use SHIFT+ENTER to create a new line.";
-        Strings.CHAT_AFTER_HOURS_MSG = "Welcome to the support channel for %APPNAME%. It is currently " +
-            "outside of standard support hours, so please leave a message and we " +
-            "will get back to you during standard business hours.";
-        Strings.CHAT_INITIAL_MSG = "Welcome to the support channel for %APPNAME%. " +
-            "Please ask your question in this channel and someone will get back to you shortly.";
-    })(Strings = SLjs.Strings || (SLjs.Strings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
@@ -519,6 +494,31 @@ var SLjs;
         return Socket;
     })();
     SLjs.Socket = Socket;
+})(SLjs || (SLjs = {}));
+var SLjs;
+(function (SLjs) {
+    var Strings;
+    (function (Strings) {
+        "use strict";
+        Strings.INTERNAL_APP_NAME = "SL.js";
+        Strings.INTERNAL_SUPPORT_GROUP_NAME = "Support Team";
+        Strings.APP_NAME = Strings.INTERNAL_APP_NAME;
+        Strings.FIRST_MESSAGE_HEADER = "First message for this visit to the channel";
+        Strings.MESSAGE_REPLY_HINT = "Reply to me using !%VISITORID% [message]";
+        Strings.ATTACHMENT_COLOR = "#D00000";
+        Strings.VISITOR_ICON = ":speech_balloon:";
+        Strings.WELCOME_MSG = "Welcome to the support channel for<br/>%APPNAME%!";
+        Strings.NAME_REQUIRED = "During our conversation, what can we call you?";
+        Strings.NAME_INPUT_PLACEHOLDER = "Enter your name in here";
+        Strings.NAME_INPUT_VALIDATION_ERROR = "Sorry, can you try entering your name in again?";
+        Strings.NAME_INPUT_BUTTON = "Continue";
+        Strings.CHAT_INPUT_PLACEHOLDER = "Enter your message here. Use SHIFT+ENTER to create a new line.";
+        Strings.CHAT_AFTER_HOURS_MSG = "Welcome to the support channel for %APPNAME%. It is currently " +
+            "outside of standard support hours, so please leave a message and we " +
+            "will get back to you during standard business hours.";
+        Strings.CHAT_INITIAL_MSG = "Welcome to the support channel for %APPNAME%. " +
+            "Please ask your question in this channel and someone will get back to you shortly.";
+    })(Strings = SLjs.Strings || (SLjs.Strings = {}));
 })(SLjs || (SLjs = {}));
 var SLjs;
 (function (SLjs) {
@@ -567,7 +567,8 @@ var SLjs;
             SLjs.HtmlConstructor.ConstructInterface(document.getElementById(SLjs.Config.element));
             if (SLjs.Config.visitorName === null || SLjs.Config.visitorName === undefined) {
                 SLjs.HtmlConstructor.ConstructWelcomeWithName(function (visitorName) {
-                    SLjs.Config.visitorName = "[" + SLjs.VisitorId + "] " + visitorName + " (" + SLjs.Config.applicationName + ")";
+                    SLjs.Config.visitorName = visitorName;
+                    SLjs.VisitorDisplayName = "[" + SLjs.VisitorId + "] " + visitorName + " (" + SLjs.Config.applicationName + ")";
                     SLjs.HtmlConstructor.ConstructConversationWindow();
                     SLjs.AppWebSocket = new SLjs.Socket();
                     SLjs.AppWebSocket.GetWebSocketData(function (webSocketUrl) {
@@ -576,7 +577,7 @@ var SLjs;
                 });
             }
             else {
-                SLjs.Config.visitorName = "[" + SLjs.VisitorId + "] " + SLjs.Config.visitorName + " (" + SLjs.Config.applicationName + ")";
+                SLjs.VisitorDisplayName = "[" + SLjs.VisitorId + "] " + SLjs.Config.visitorName + " (" + SLjs.Config.applicationName + ")";
                 SLjs.HtmlConstructor.ConstructConversationWindow();
                 SLjs.AppWebSocket = new SLjs.Socket();
                 SLjs.AppWebSocket.GetWebSocketData(function (webSocketUrl) {

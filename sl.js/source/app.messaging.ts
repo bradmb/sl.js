@@ -15,7 +15,7 @@
 
         var packet: Models.ISLMessage = {
             text: message,
-            username: Config.visitorName,
+            username: VisitorDisplayName,
             icon_emoji: Config.visitorIcon,
             timespan: ""
         };
@@ -39,7 +39,7 @@
         var packet: Models.ISLAttachment = {
             attachments: userDataPoints,
             text: message,
-            username: Config.visitorName,
+            username: VisitorDisplayName,
             icon_emoji: Config.visitorIcon,
             timespan: ""
         };
