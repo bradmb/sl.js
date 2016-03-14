@@ -34,7 +34,7 @@ This is the display for the default "float" configuration. If docking to the lef
 
 ## Requirements ##
 1. The .css and .js files from this script included in your page
-2. [A Slack API Token](https://api.slack.com/tokens)
+2. [A Slack Bot API Token](https://my.slack.com/services/new/bot)
 3. [The Slack Channel ID](https://api.slack.com/methods/channels.list/test) for the channel that you want to run this script in
 
 ----------
