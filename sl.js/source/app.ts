@@ -16,6 +16,7 @@ module SLjs {
     "use strict";
 
     export var VisitorId: string;
+    export var VisitorDisplayName: string;
     export var Users: Models.ISLSupportUser[] = <any>{};
     export var AppWebSocket: Socket;
     export var AppHandler: ApplicationHandler;
@@ -72,7 +73,8 @@ module SLjs {
 
             if (Config.visitorName === null || Config.visitorName === undefined) {
                 HtmlConstructor.ConstructWelcomeWithName(function (visitorName: string) {
-                    Config.visitorName = "[" + VisitorId + "] " + visitorName + " (" + Config.applicationName + ")";
+                    Config.visitorName = visitorName;
+                    VisitorDisplayName = "[" + VisitorId + "] " + visitorName + " (" + Config.applicationName + ")";
                     HtmlConstructor.ConstructConversationWindow();
 
                     AppWebSocket = new Socket();
@@ -81,7 +83,7 @@ module SLjs {
                     });
                 });
             } else {
-                Config.visitorName = "[" + VisitorId + "] " + Config.visitorName + " (" + Config.applicationName + ")";
+                VisitorDisplayName = "[" + VisitorId + "] " + Config.visitorName + " (" + Config.applicationName + ")";
                 HtmlConstructor.ConstructConversationWindow();
 
                 AppWebSocket = new Socket();
